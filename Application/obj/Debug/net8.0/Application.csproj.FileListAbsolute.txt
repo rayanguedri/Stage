@@ -15,3 +15,4 @@ C:\Users\RYANG\Desktop\Stage\Reactivities\Application\obj\Debug\net8.0\Applicati
 C:\Users\RYANG\Desktop\Stage\Reactivities\Application\obj\Debug\net8.0\refint\Application.dll
 C:\Users\RYANG\Desktop\Stage\Reactivities\Application\obj\Debug\net8.0\Application.pdb
 C:\Users\RYANG\Desktop\Stage\Reactivities\Application\obj\Debug\net8.0\ref\Application.dll
+C:\Users\RYANG\Desktop\Stage\Reactivities\Application\obj\Debug\net8.0\Application.sourcelink.json
