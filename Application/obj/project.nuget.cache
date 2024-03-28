@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "+7axHb5Q5NLB4WTNUJLbWlX0WTCbHO1YcOvL6OIwf6GOGwoNuHbIcVE46Of/kcvxDg0USvF1lwaC4qZcpdyP7Q==",
+  "dgSpecHash": "uaIA1cGW1Uvq0FSDrbxh0hDaNUPqLOu6K9dlWvl1IMVqsK53KWWMerF3B7VG2mSxP+RpKy9d62qUxnjTmfBG+A==",
   "success": true,
   "projectFilePath": "C:\\Users\\RYANG\\Desktop\\Stage\\Reactivities\\Application\\Application.csproj",
   "expectedPackageFiles": [
@@ -9,6 +9,9 @@
     "C:\\Users\\RYANG\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\RYANG\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
     "C:\\Users\\RYANG\\.nuget\\packages\\efcore.automaticmigrations\\8.0.0\\efcore.automaticmigrations.8.0.0.nupkg.sha512",
+    "C:\\Users\\RYANG\\.nuget\\packages\\fluentvalidation\\11.5.1\\fluentvalidation.11.5.1.nupkg.sha512",
+    "C:\\Users\\RYANG\\.nuget\\packages\\fluentvalidation.aspnetcore\\11.3.0\\fluentvalidation.aspnetcore.11.3.0.nupkg.sha512",
+    "C:\\Users\\RYANG\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.5.1\\fluentvalidation.dependencyinjectionextensions.11.5.1.nupkg.sha512",
     "C:\\Users\\RYANG\\.nuget\\packages\\mediatr\\12.2.0\\mediatr.12.2.0.nupkg.sha512",
     "C:\\Users\\RYANG\\.nuget\\packages\\mediatr.contracts\\2.0.1\\mediatr.contracts.2.0.1.nupkg.sha512",
     "C:\\Users\\RYANG\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
