@@ -4560,11 +4560,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\RYANG\\Desktop\\Stage\\Reactivities\\Persistence\\Persistence.csproj",
+      "projectUniqueName": "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Persistence\\Persistence.csproj",
       "projectName": "Persistence",
-      "projectPath": "C:\\Users\\RYANG\\Desktop\\Stage\\Reactivities\\Persistence\\Persistence.csproj",
+      "projectPath": "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Persistence\\Persistence.csproj",
       "packagesPath": "C:\\Users\\RYANG\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\RYANG\\Desktop\\Stage\\Reactivities\\Persistence\\obj\\",
+      "outputPath": "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Persistence\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -4582,8 +4582,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\RYANG\\Desktop\\Stage\\Reactivities\\Domain\\Domain.csproj": {
-              "projectPath": "C:\\Users\\RYANG\\Desktop\\Stage\\Reactivities\\Domain\\Domain.csproj"
+            "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Domain\\Domain.csproj": {
+              "projectPath": "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Domain\\Domain.csproj"
             }
           }
         }
