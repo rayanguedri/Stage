@@ -7,6 +7,8 @@ namespace Domain
         public string DisplayName { get; set; }
         public string Bio { get; set; }
         public ICollection<ActivityAttendee> Activities { get; set; }
+
+        public ICollection<Photo> Photos { get; set; }
     }
 }
-//dotnet ef migrations add IdentityAdded -p Persistence -s API
+//dotnet ef migrations add PhotoEntityAdded -p Persistence -s API
