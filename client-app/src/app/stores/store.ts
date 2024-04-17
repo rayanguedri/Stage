@@ -22,6 +22,7 @@ export const store: Store = {
     modalStore: new ModalStore(),
     profileStore: new ProfileStore(),
     commentStore: new CommentStore()
+    
 }
 
 export const StoreContext = createContext(store);

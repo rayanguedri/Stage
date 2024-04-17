@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-declaration-merging */
 import { User } from "./user";
 
 export interface Profile {
@@ -5,6 +6,9 @@ export interface Profile {
     displayName: string;
     image?: string;
     bio?: string;
+    following: boolean;
+    followersCount: number;
+    followingCount: number;
     photos?: Photo[];
 
     
@@ -20,6 +24,9 @@ export class Profile implements Profile {
     displayName: string;
     image?: string;
     bio?: string;
+    following = false;
+    followersCount = 0;
+    followingCount = 0;
 }
 
 export interface Photo {

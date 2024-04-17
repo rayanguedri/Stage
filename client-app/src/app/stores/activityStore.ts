@@ -6,6 +6,7 @@ import { v4 as uuid } from 'uuid';
 import { store } from "./store";
 import { Profile } from "../models/profile";
 
+
 export default class ActivityStore {
     activityRegistry = new Map<string, Activity>();
     selectedActivity?: Activity = undefined;
@@ -186,6 +187,17 @@ export default class ActivityStore {
     
     clearSelectedActivity = () => {
         this.selectedActivity = undefined;
+    }
+
+    updateAttendeeFollowing = (username: string) => {
+        this.activityRegistry.forEach(activity => {
+            activity.attendees.forEach((attendee: Profile) => {
+                if (attendee.username === username) {
+                    attendee.following ? attendee.followersCount-- : attendee.followersCount++;
+                    attendee.following = !attendee.following;
+                }
+            })
+        })
     }
 
 }

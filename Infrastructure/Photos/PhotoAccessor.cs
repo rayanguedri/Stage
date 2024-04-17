@@ -10,6 +10,7 @@ namespace Infrastructure.Photos
     public class PhotoAccessor : IPhotoAccessor
     {
         private readonly Cloudinary _cloudinary;
+
         public PhotoAccessor(IOptions<CloudinarySettings> config)
         {
             var account = new Account(
@@ -17,7 +18,6 @@ namespace Infrastructure.Photos
                 config.Value.ApiKey,
                 config.Value.ApiSecret
             );
-
             _cloudinary = new Cloudinary(account);
         }
 
@@ -54,7 +54,6 @@ namespace Infrastructure.Photos
             var deleteParams = new DeletionParams(publicId);
             var result = await _cloudinary.DestroyAsync(deleteParams);
             return result.Result == "ok" ? result.Result : null;
-
         }
     }
 }
