@@ -3,7 +3,9 @@ export interface User {
     displayName: string;
     token: string;
     image?: string;
+   // TODO add timestamp
 }
+
 
 export interface UserFormValues {
     email: string;
