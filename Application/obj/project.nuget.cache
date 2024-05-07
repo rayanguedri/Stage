@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "mrhMWfCrdfyO05iKQ7R+H1aEMtEXGuS2LfaQ3eU2eHvbayOnl7pf7/V5dFg++sVqUIWf5LrmZjhY0bIA6JaErQ==",
+  "dgSpecHash": "mooo7e3e+AdArSqyaA+FqqPgu/qzGJMFPYREi+g1tBL7clB4FkLWg8K8cdU5BQ5OI9oBc7Pu48RrnWxVFv2Acw==",
   "success": true,
   "projectFilePath": "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Application\\Application.csproj",
   "expectedPackageFiles": [
@@ -60,6 +60,8 @@
     "C:\\Users\\RYANG\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
     "C:\\Users\\RYANG\\.nuget\\packages\\mysql.data\\8.3.0\\mysql.data.8.3.0.nupkg.sha512",
     "C:\\Users\\RYANG\\.nuget\\packages\\mysql.entityframeworkcore\\8.0.0\\mysql.entityframeworkcore.8.0.0.nupkg.sha512",
+    "C:\\Users\\RYANG\\.nuget\\packages\\npgsql\\8.0.2\\npgsql.8.0.2.nupkg.sha512",
+    "C:\\Users\\RYANG\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\8.0.2\\npgsql.entityframeworkcore.postgresql.8.0.2.nupkg.sha512",
     "C:\\Users\\RYANG\\.nuget\\packages\\sqlitepclraw.bundle_e_sqlite3\\2.1.6\\sqlitepclraw.bundle_e_sqlite3.2.1.6.nupkg.sha512",
     "C:\\Users\\RYANG\\.nuget\\packages\\sqlitepclraw.core\\2.1.6\\sqlitepclraw.core.2.1.6.nupkg.sha512",
     "C:\\Users\\RYANG\\.nuget\\packages\\sqlitepclraw.lib.e_sqlite3\\2.1.6\\sqlitepclraw.lib.e_sqlite3.2.1.6.nupkg.sha512",
