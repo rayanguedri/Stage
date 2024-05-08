@@ -1,8 +1,8 @@
 import { Formik, Form, Field, FieldProps } from 'formik';
-import { observer } from 'mobx-react-lite'
-import { useEffect } from 'react'
+import { observer } from 'mobx-react-lite';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Segment, Header, Comment, Loader } from 'semantic-ui-react'
+import { Segment, Header, Comment, Loader, Button } from 'semantic-ui-react';
 import { useStore } from '../../../app/stores/store';
 import * as Yup from 'yup';
 import { formatDistanceToNow } from 'date-fns';
@@ -20,16 +20,16 @@ export default observer(function ActivityDetailedChat({ activityId }: Props) {
         }
         return () => {
             commentStore.clearComments();
-        }
+        };
     }, [commentStore, activityId]);
 
     return (
         <>
             <Segment
-                textAlign='center'
-                attached='top'
+                textAlign="center"
+                attached="top"
                 inverted
-                color='teal'
+                color="teal"
                 style={{ border: 'none' }}
             >
                 <Header>Chat about this event</Header>
@@ -37,24 +37,24 @@ export default observer(function ActivityDetailedChat({ activityId }: Props) {
             <Segment attached clearing>
                 <Formik
                     onSubmit={(values, { resetForm }) =>
-                        commentStore.addComment(values).then(() => resetForm())}
+                        commentStore.addComment(values).then(() => resetForm())
+                    }
                     initialValues={{ body: '' }}
                     validationSchema={Yup.object({
-                        body: Yup.string().required()
+                        body: Yup.string().required(),
                     })}
                 >
                     {({ isSubmitting, isValid, handleSubmit }) => (
-                        <Form className='ui form'>
-                            <Field name='body'>
+                        <Form className="ui form">
+                            <Field name="body">
                                 {(props: FieldProps) => (
                                     <div style={{ position: 'relative' }}>
                                         <Loader active={isSubmitting} />
                                         <textarea
-                                            placeholder='Enter your comment (Enter to submit, SHIFT + Enter for new line)'
+                                            placeholder="Enter your comment (Enter to submit, SHIFT + Enter for new line)"
                                             rows={2}
                                             {...props.field}
-                                            
-                                            onKeyDown={e => {
+                                            onKeyDown={(e) => {
                                                 if (e.key === 'Enter' && e.shiftKey) {
                                                     return;
                                                 }
@@ -71,23 +71,32 @@ export default observer(function ActivityDetailedChat({ activityId }: Props) {
                     )}
                 </Formik>
                 <Comment.Group>
-                    {commentStore.comments.map(comment => (
+                    {commentStore.comments.map((comment) => (
                         <Comment key={comment.id}>
                             <Comment.Avatar src={comment.image || '/assets/user.png'} />
                             <Comment.Content>
-                                <Comment.Author as={Link} to={`/profiles/${comment.username}`}>{comment.displayName}</Comment.Author>
+                                <Comment.Author as={Link} to={`/profiles/${comment.username}`}>
+                                    {comment.displayName}
+                                </Comment.Author>
                                 <Comment.Metadata>
                                     <div>{formatDistanceToNow(comment.createdAt)} ago</div>
                                 </Comment.Metadata>
-                                <Comment.Text style={{ whiteSpace: 'pre-wrap' }}>{comment.body}</Comment.Text>
+                                <Comment.Text style={{ whiteSpace: 'pre-wrap' }}>
+                                    {comment.body}
+                                </Comment.Text>
+                                <Comment.Actions>
+                                    <Button
+                                        color="red"
+                                        onClick={() => commentStore.deleteComment(comment.id)}
+                                    >
+                                        Delete
+                                    </Button>
+                                </Comment.Actions>
                             </Comment.Content>
                         </Comment>
                     ))}
-
-
                 </Comment.Group>
             </Segment>
         </>
-
-    )
-})
+    );
+});

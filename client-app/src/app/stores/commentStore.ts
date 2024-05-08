@@ -36,8 +36,14 @@ export default class CommentStore {
                 runInAction(() => {
                     comment.createdAt = new Date(comment.createdAt);
                     this.comments.unshift(comment);
-                })
-            })
+                });
+            });
+
+            this.hubConnection.on('CommentDeleted', (commentId: number) => {
+                runInAction(() => {
+                    this.comments = this.comments.filter(comment => comment.id !== commentId);
+                });
+            });
         }
     }
 
@@ -56,6 +62,15 @@ export default class CommentStore {
             await this.hubConnection?.invoke('SendComment', values);
         } catch (error) {
             console.log(error);
+        }
+    }
+
+    deleteComment = async (commentId: number) => {
+        try {
+            await this.hubConnection?.invoke('DeleteComment', { commentId });
+            location.reload();
+        } catch (error) {
+            console.error('Failed to delete comment:', error);
         }
     }
 }
