@@ -32,6 +32,18 @@ namespace API.SignalR
             }
         }
 
+          public async Task EditComment(Edit.Command command)
+        {
+            var result = await _mediator.Send(command);
+
+            if (result.IsSuccess)
+            {
+                // If the comment was successfully edited, broadcast the updated comment to the group
+                await Clients.Group(command.ActivityId.ToString())
+                    .SendAsync("EditComment", result.Value);
+            }
+        }
+
         public override async Task OnConnectedAsync()
         {
             var httpContext = Context.GetHttpContext();

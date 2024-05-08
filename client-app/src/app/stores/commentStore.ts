@@ -44,6 +44,16 @@ export default class CommentStore {
                     this.comments = this.comments.filter(comment => comment.id !== commentId);
                 });
             });
+
+            this.hubConnection.on('EditComment', (updatedComment: ChatComment) => {
+                runInAction(() => {
+                    // Find the comment and replace it with the updated comment
+                    const index = this.comments.findIndex(comment => comment.id === updatedComment.id);
+                    if (index !== -1) {
+                        this.comments[index] = updatedComment;
+                    }
+                });
+            });
         }
     }
 
@@ -71,6 +81,20 @@ export default class CommentStore {
             location.reload();
         } catch (error) {
             console.error('Failed to delete comment:', error);
+        }
+    }
+
+    editComment = async (commentId: number, body?: string, activityId?: string) => {
+        try {
+            // Invoke the 'EditComment' method on the server
+            await this.hubConnection?.invoke('EditComment', {
+                commentId,
+                body,
+                activityId
+            });
+            location.reload();
+        } catch (error) {
+            console.error('Failed to edit comment:', error);
         }
     }
 }
