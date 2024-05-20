@@ -12,5 +12,7 @@ namespace Domain
         public bool IsCancelled { get; set; }
         public ICollection<ActivityAttendee> Attendees { get; set; } = new List<ActivityAttendee>();
         public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+        public ICollection<Rating> Ratings { get; set; } = new List<Rating>(); 
+        public double AverageRating { get; set; } 
     }
 }

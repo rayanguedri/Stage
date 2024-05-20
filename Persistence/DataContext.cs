@@ -15,7 +15,7 @@ namespace Persistence
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<UserFollowing> UserFollowings { get; set; }
-
+        public DbSet<Rating> Ratings { get; set; } // Add DbSet for Rating entity
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -51,6 +51,12 @@ namespace Persistence
                     .HasForeignKey(t => t.TargetId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
+
+            // Configure the relationship between Activity and Rating
+            builder.Entity<Rating>()
+                .HasOne(r => r.Activity)
+                .WithMany(a => a.Ratings)
+                .HasForeignKey(r => r.ActivityId);
         }
     }
 }

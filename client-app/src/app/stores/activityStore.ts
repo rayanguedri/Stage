@@ -261,4 +261,37 @@ export default class ActivityStore {
         })
     }
 
+    rateActivity = async (activityId: string, ratingValue: number) => {
+        try {
+            const user = store.userStore.user;
+            if (!user) {
+                console.error('User not found.');
+                return;
+            }
+    
+            await agent.Activities.rate(activityId, ratingValue);
+            runInAction(() => {
+                const activity = this.getActivity(activityId);
+                if (activity) {
+                    // Ensure the ratings array exists and initialize if necessary
+                    if (!activity.ratings) {
+                        activity.ratings = [];
+                    }
+                    // Push the new rating to the ratings array
+                    activity.ratings.push({ id: uuid(), userId: user.username, activityId, value: ratingValue });
+                } else {
+                    console.error(`Activity with ID ${activityId} not found.`);
+                }
+            });
+        } catch (error) {
+            console.log('Error rating activity: ', error);
+        }
+    }
+    
+        
+    
+
+  
+       
+
 }

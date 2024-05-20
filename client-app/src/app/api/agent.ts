@@ -80,7 +80,8 @@ const Activities = {
     create: (activity: ActivityFormValues) => requests.post<void>(`/activities`, activity),
     update: (activity: ActivityFormValues) => requests.put<void>(`/activities/${activity.id}`, activity),
     delete: (id: string) => requests.del<void>(`/activities/${id}`),
-    attend: (id: string) => requests.post<void>(`/activities/${id}/attend`, {})
+    attend: (id: string) => requests.post<void>(`/activities/${id}/attend`, {}),
+    rate: (id: string, value: number) => requests.post<void>(`/activities/${id}/rate`, { value })
 }
 
 const Account = {
