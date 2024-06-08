@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Application\\Application.csproj": {}
+    "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Application\\Application.csproj": {}
   },
   "projects": {
-    "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Application\\Application.csproj": {
+    "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Application\\Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Application\\Application.csproj",
+        "projectUniqueName": "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Application\\Application.csproj",
         "projectName": "Application",
-        "projectPath": "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Application\\Application.csproj",
+        "projectPath": "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Application\\Application.csproj",
         "packagesPath": "C:\\Users\\RYANG\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Application\\obj\\",
+        "outputPath": "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -29,11 +29,11 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Domain\\Domain.csproj": {
-                "projectPath": "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Domain\\Domain.csproj"
+              "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Domain\\Domain.csproj": {
+                "projectPath": "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Domain\\Domain.csproj"
               },
-              "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Persistence\\Persistence.csproj": {
-                "projectPath": "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Persistence\\Persistence.csproj"
+              "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Persistence\\Persistence.csproj": {
+                "projectPath": "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Persistence\\Persistence.csproj"
               }
             }
           }
@@ -64,6 +64,10 @@
             "MediatR": {
               "target": "Package",
               "version": "[12.2.0, )"
+            },
+            "Stripe.net": {
+              "target": "Package",
+              "version": "[44.11.0, )"
             }
           },
           "imports": [
@@ -82,18 +86,18 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.205/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.206/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Domain\\Domain.csproj": {
+    "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Domain\\Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Domain\\Domain.csproj",
+        "projectUniqueName": "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Domain\\Domain.csproj",
         "projectName": "Domain",
-        "projectPath": "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Domain\\Domain.csproj",
+        "projectPath": "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Domain\\Domain.csproj",
         "packagesPath": "C:\\Users\\RYANG\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Domain\\obj\\",
+        "outputPath": "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -141,6 +145,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[8.0.2, )"
+            },
+            "Stripe.net": {
+              "target": "Package",
+              "version": "[44.11.0, )"
             }
           },
           "imports": [
@@ -159,18 +167,18 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.205/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.206/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Persistence\\Persistence.csproj": {
+    "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Persistence\\Persistence.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Persistence\\Persistence.csproj",
+        "projectUniqueName": "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Persistence\\Persistence.csproj",
         "projectName": "Persistence",
-        "projectPath": "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Persistence\\Persistence.csproj",
+        "projectPath": "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Persistence\\Persistence.csproj",
         "packagesPath": "C:\\Users\\RYANG\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Persistence\\obj\\",
+        "outputPath": "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Persistence\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -188,8 +196,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Domain\\Domain.csproj": {
-                "projectPath": "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Domain\\Domain.csproj"
+              "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Domain\\Domain.csproj": {
+                "projectPath": "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Domain\\Domain.csproj"
               }
             }
           }
@@ -230,6 +238,10 @@
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",
               "version": "[8.0.2, )"
+            },
+            "Stripe.net": {
+              "target": "Package",
+              "version": "[44.11.0, )"
             }
           },
           "imports": [
@@ -248,7 +260,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.205/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.206/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

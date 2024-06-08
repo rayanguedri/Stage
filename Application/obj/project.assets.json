@@ -973,6 +973,19 @@
           }
         }
       },
+      "Newtonsoft.Json/12.0.3": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Npgsql/8.0.2": {
         "type": "package",
         "dependencies": {
@@ -1137,6 +1150,23 @@
         },
         "runtime": {
           "lib/net6.0/SQLitePCLRaw.provider.e_sqlite3.dll": {}
+        }
+      },
+      "Stripe.net/44.11.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "12.0.3",
+          "System.Configuration.ConfigurationManager": "6.0.0"
+        },
+        "compile": {
+          "lib/net6.0/Stripe.net.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Stripe.net.dll": {
+            "related": ".xml"
+          }
         }
       },
       "System.Buffers/4.5.1": {
@@ -1652,7 +1682,8 @@
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
           "EFCore.AutomaticMigrations": "8.0.0",
-          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "8.0.3"
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "8.0.3",
+          "Stripe.net": "44.11.0"
         },
         "compile": {
           "bin/placeholder/Domain.dll": {}
@@ -1669,7 +1700,8 @@
           "EFCore.AutomaticMigrations": "8.0.0",
           "Microsoft.EntityFrameworkCore.Sqlite": "8.0.2",
           "MySql.EntityFrameworkCore": "8.0.0",
-          "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.2"
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.2",
+          "Stripe.net": "44.11.0"
         },
         "compile": {
           "bin/placeholder/Persistence.dll": {}
@@ -3012,6 +3044,37 @@
         "mysql.entityframeworkcore.nuspec"
       ]
     },
+    "Newtonsoft.Json/12.0.3": {
+      "sha512": "6mgjfnRB4jKMlzHSl+VD+oUc1IebOZabkbyWj2RiTgWwYPPuaK1H97G1sHqGwPlS5npiF5Q0OrxN1wni2n5QWg==",
+      "type": "package",
+      "path": "newtonsoft.json/12.0.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "lib/net20/Newtonsoft.Json.dll",
+        "lib/net20/Newtonsoft.Json.xml",
+        "lib/net35/Newtonsoft.Json.dll",
+        "lib/net35/Newtonsoft.Json.xml",
+        "lib/net40/Newtonsoft.Json.dll",
+        "lib/net40/Newtonsoft.Json.xml",
+        "lib/net45/Newtonsoft.Json.dll",
+        "lib/net45/Newtonsoft.Json.xml",
+        "lib/netstandard1.0/Newtonsoft.Json.dll",
+        "lib/netstandard1.0/Newtonsoft.Json.xml",
+        "lib/netstandard1.3/Newtonsoft.Json.dll",
+        "lib/netstandard1.3/Newtonsoft.Json.xml",
+        "lib/netstandard2.0/Newtonsoft.Json.dll",
+        "lib/netstandard2.0/Newtonsoft.Json.xml",
+        "lib/portable-net40+sl5+win8+wp8+wpa81/Newtonsoft.Json.dll",
+        "lib/portable-net40+sl5+win8+wp8+wpa81/Newtonsoft.Json.xml",
+        "lib/portable-net45+win8+wp8+wpa81/Newtonsoft.Json.dll",
+        "lib/portable-net45+win8+wp8+wpa81/Newtonsoft.Json.xml",
+        "newtonsoft.json.12.0.3.nupkg.sha512",
+        "newtonsoft.json.nuspec",
+        "packageIcon.png"
+      ]
+    },
     "Npgsql/8.0.2": {
       "sha512": "MuJzLoWCaQhQAR3oh66YR0Ir6mxuezncGX3f8wxvAc21g0+9HICktJQlqMoODhxztZKXE5k9GxRxqUAN+vPb4g==",
       "type": "package",
@@ -3137,6 +3200,30 @@
         "lib/netstandard2.0/SQLitePCLRaw.provider.e_sqlite3.dll",
         "sqlitepclraw.provider.e_sqlite3.2.1.6.nupkg.sha512",
         "sqlitepclraw.provider.e_sqlite3.nuspec"
+      ]
+    },
+    "Stripe.net/44.11.0": {
+      "sha512": "v93nRUs0KGrqbetHMKo28rRkuujaXq9Y3dUr5j4gO0R+l/hN/BnX6EVFGXOa5bCNYFGZXheJTszIFDTMdhKuRw==",
+      "type": "package",
+      "path": "stripe.net/44.11.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "README.md",
+        "icon.png",
+        "lib/net461/Stripe.net.dll",
+        "lib/net461/Stripe.net.xml",
+        "lib/net5.0/Stripe.net.dll",
+        "lib/net5.0/Stripe.net.xml",
+        "lib/net6.0/Stripe.net.dll",
+        "lib/net6.0/Stripe.net.xml",
+        "lib/netcoreapp3.1/Stripe.net.dll",
+        "lib/netcoreapp3.1/Stripe.net.xml",
+        "lib/netstandard2.0/Stripe.net.dll",
+        "lib/netstandard2.0/Stripe.net.xml",
+        "stripe.net.44.11.0.nupkg.sha512",
+        "stripe.net.nuspec"
       ]
     },
     "System.Buffers/4.5.1": {
@@ -4421,7 +4508,8 @@
       "Domain >= 1.0.0",
       "FluentValidation.AspNetCore >= 11.3.0",
       "MediatR >= 12.2.0",
-      "Persistence >= 1.0.0"
+      "Persistence >= 1.0.0",
+      "Stripe.net >= 44.11.0"
     ]
   },
   "packageFolders": {
@@ -4431,11 +4519,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Application\\Application.csproj",
+      "projectUniqueName": "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Application\\Application.csproj",
       "projectName": "Application",
-      "projectPath": "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Application\\Application.csproj",
+      "projectPath": "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Application\\Application.csproj",
       "packagesPath": "C:\\Users\\RYANG\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Application\\obj\\",
+      "outputPath": "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Application\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -4453,11 +4541,11 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Domain\\Domain.csproj": {
-              "projectPath": "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Domain\\Domain.csproj"
+            "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Domain\\Domain.csproj": {
+              "projectPath": "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Domain\\Domain.csproj"
             },
-            "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Persistence\\Persistence.csproj": {
-              "projectPath": "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Persistence\\Persistence.csproj"
+            "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Persistence\\Persistence.csproj": {
+              "projectPath": "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Persistence\\Persistence.csproj"
             }
           }
         }
@@ -4488,6 +4576,10 @@
           "MediatR": {
             "target": "Package",
             "version": "[12.2.0, )"
+          },
+          "Stripe.net": {
+            "target": "Package",
+            "version": "[44.11.0, )"
           }
         },
         "imports": [
@@ -4506,7 +4598,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.205/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.206/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

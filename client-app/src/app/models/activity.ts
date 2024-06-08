@@ -15,6 +15,11 @@ export interface IActivity {
   Host?: Profile;
   attendees: Profile[];
   ratings: Rating[];
+  ticketType: string;
+  ticketPrice: number;
+  ticketQuantitySold: number;
+  ticketQuantityAvailable: number;
+  requiresPayment: boolean; // Added requiresPayment
 }
 
 export class Activity implements IActivity {
@@ -27,6 +32,11 @@ export class Activity implements IActivity {
     this.city = init.city;
     this.venue = init.venue;
     this.ratings = [];
+    this.ticketType = init.ticketType;
+    this.ticketPrice = init.ticketPrice;
+    this.ticketQuantitySold = init.ticketQuantitySold;
+    this.ticketQuantityAvailable = init.ticketQuantityAvailable;
+    this.requiresPayment = false; // Initialize requiresPayment
   }
 
   id: string;
@@ -43,6 +53,11 @@ export class Activity implements IActivity {
   Host?: Profile;
   attendees: Profile[] = [];
   ratings: Rating[] = [];
+  ticketType: string = '';
+  ticketPrice: number = 0;
+  ticketQuantitySold: number = 0;
+  ticketQuantityAvailable: number = 0;
+  requiresPayment: boolean; // Added requiresPayment
 
   get averageRating(): number {
     if (!this.ratings || this.ratings.length === 0) {
@@ -65,6 +80,11 @@ export class ActivityFormValues {
   date: Date | null = null;
   city: string = '';
   venue: string = '';
+  ticketType: string = '';
+  ticketPrice: number = 0;
+  ticketQuantitySold: number = 0;
+  ticketQuantityAvailable: number = 0;
+  requiresPayment: boolean = false;
 
   constructor(activity?: ActivityFormValues) {
     if (activity) {
@@ -75,6 +95,11 @@ export class ActivityFormValues {
       this.date = activity.date;
       this.city = activity.city;
       this.venue = activity.venue;
+      this.ticketType = activity.ticketType;
+      this.ticketPrice = activity.ticketPrice;
+      this.ticketQuantitySold = activity.ticketQuantitySold;
+      this.ticketQuantityAvailable = activity.ticketQuantityAvailable;
+      this.requiresPayment = activity.requiresPayment;
     }
   }
 }

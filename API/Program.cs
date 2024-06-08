@@ -1,5 +1,6 @@
 using API.Extensions;
 using API.Middleware;
+using API.Services;
 using API.SignalR;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,15 @@ builder.Services.AddControllers(opt =>
 });
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddIdentityServices(builder.Configuration);
+builder.Services.AddScoped<PaymentService>();
+
+// Register StripeClient service
+builder.Services.AddScoped<StripeClient>(provider =>
+{
+    var config = provider.GetRequiredService<IConfiguration>();
+    var stripeApiKey = config["StripeSettings:SecretKey"];
+    return new StripeClient(stripeApiKey);
+});
 
 var app = builder.Build();
 
@@ -31,7 +42,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Ensure CORS is configured before authentication/authorization
 app.UseCors("CorsPolicy");
+
+app.UseHttpsRedirection(); // Added HTTPS redirection
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -52,7 +66,7 @@ try
 catch (Exception ex)
 {
     var logger = services.GetRequiredService<ILogger<Program>>();
-    logger.LogError(ex, "An error occured during migration");
+    logger.LogError(ex, "An error occurred during migration");
 }
 
 app.Run();

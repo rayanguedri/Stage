@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace Domain
 {
     public class Activity
@@ -12,7 +15,13 @@ namespace Domain
         public bool IsCancelled { get; set; }
         public ICollection<ActivityAttendee> Attendees { get; set; } = new List<ActivityAttendee>();
         public ICollection<Comment> Comments { get; set; } = new List<Comment>();
-        public ICollection<Rating> Ratings { get; set; } = new List<Rating>(); 
-        public double AverageRating { get; set; } 
+        public ICollection<Rating> Ratings { get; set; } = new List<Rating>();
+        public double AverageRating { get; set; }
+        public string PaymentIntentId { get; set; }
+        public ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
+        public bool RequiresPayment { get; set; }
+        public decimal TicketPrice { get; set; }
+        public int TicketQuantitySold { get; set; }
+        public int TicketQuantityAvailable { get; set; }
     }
 }

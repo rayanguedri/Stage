@@ -14,7 +14,7 @@ export default class ActivityStore {
     editMode = false;
     loading = false;
     loadingInitial = false;
-    pagination : Pagination | null = null;
+    pagination: Pagination | null = null;
     pagingParams = new PagingParams();
     predicate = new Map().set('all', true); // tfiltri bel date
 
@@ -154,7 +154,7 @@ export default class ActivityStore {
         const user = store.userStore.user;
         const attendee = new Profile(user!);
 
-         activity.id = uuid();
+        activity.id = uuid();
         try {
             await agent.Activities.create(activity);
             const newActivity = new Activity(activity);
@@ -172,7 +172,7 @@ export default class ActivityStore {
     }
 
     updateActivity = async (activity: ActivityFormValues) => {
-        
+
         try {
             await agent.Activities.update(activity)
             runInAction(() => {
@@ -181,13 +181,10 @@ export default class ActivityStore {
                     this.activityRegistry.set(activity.id, updatedActivity as Activity);
                     this.selectedActivity = updatedActivity as Activity;
                 }
-                
-                
-                
             })
         } catch (error) {
             console.log(error);
-           
+
         }
     }
 
@@ -245,7 +242,7 @@ export default class ActivityStore {
         }
     }
 
-    
+
     clearSelectedActivity = () => {
         this.selectedActivity = undefined;
     }
@@ -268,7 +265,7 @@ export default class ActivityStore {
                 console.error('User not found.');
                 return;
             }
-    
+
             await agent.Activities.rate(activityId, ratingValue);
             runInAction(() => {
                 const activity = this.getActivity(activityId);
@@ -287,11 +284,38 @@ export default class ActivityStore {
             console.log('Error rating activity: ', error);
         }
     }
-    
-        
+
+    purchaseTicket = async (activityId: string) => {
+        try {
+            await agent.Activities.purchaseTicket(activityId);
+            runInAction(() => {
+                const activity = this.getActivity(activityId);
+                if (activity) {
+                    activity.ticketQuantitySold += 1; // Assuming ticket quantity sold increases by 1 on each purchase
+                    activity.ticketQuantityAvailable -= 1; // Assuming ticket quantity available decreases by 1 on each purchase
+                }
+            });
+        } catch (error) {
+            console.error('Error purchasing ticket:', error);
+        }
+    }
+
+    handlepayment = async() => {
+
+       try {
+        await agent.Activities.makePayment()
+        runInAction(() => {
+            console.log("payment is good ")
+           /*  const activity = this.getActivity();
+            if (activity) {
+                activity.ticketQuantitySold += 1; // Assuming ticket quantity sold increases by 1 on each purchase
+                activity.ticketQuantityAvailable -= 1; // Assuming ticket quantity available decreases by 1 on each purchase
+            } */
+        });
+        } catch (error) {
+            console.error('Error initiating payment:', error);
+        }
     
 
-  
-       
-
+    }
 }

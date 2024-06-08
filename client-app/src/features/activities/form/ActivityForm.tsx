@@ -16,12 +16,12 @@ import { categoryOptions } from '../../../app/common/options/categoryOptions';
 
 export default observer(function ActivityForm() {
     const { activityStore } = useStore();
-    const { createActivity, updateActivity,
-        loadActivity, loadingInitial } = activityStore;
+    const { createActivity, updateActivity, loadActivity, loadingInitial } = activityStore;
     const { id } = useParams();
     const navigate = useNavigate();
 
-    const [activity, setActivity] = useState<ActivityFormValues>(new ActivityFormValues());
+    const [activityState, setActivityState] = useState<ActivityFormValues>(new ActivityFormValues());
+    const [requiresPayment, setRequiresPayment] = useState(false);
 
     const validationSchema = Yup.object({
         title: Yup.string().required('The event title is required'),
@@ -29,26 +29,34 @@ export default observer(function ActivityForm() {
         description: Yup.string().required(),
         date: Yup.string().required('Date is required').nullable(),
         venue: Yup.string().required(),
-        city: Yup.string().required(),
+      
     });
 
     useEffect(() => {
-        if (id) loadActivity(id).then(activity => setActivity(new ActivityFormValues(activity)));
+        if (id) {
+            loadActivity(id).then(activity => {
+                if (activity) {
+                    setActivityState(new ActivityFormValues(activity));
+                    setRequiresPayment(activity.requiresPayment);
+                }
+            });
+        }
     }, [id, loadActivity]);
 
     function handleFormSubmit(activity: ActivityFormValues) {
+        const updatedActivity = { ...activity, requiresPayment };
         if (!activity.id) {
             const newActivity = {
-                ...activity,
+                ...updatedActivity,
                 id: uuid()
             };
-            createActivity(newActivity).then(() => navigate(`/activities/${newActivity.id}`))
+            createActivity(newActivity).then(() => navigate(`/activities/${newActivity.id}`));
         } else {
-            updateActivity(activity).then(() => navigate(`/activities/${activity.id}`))
+            updateActivity(updatedActivity).then(() => navigate(`/activities/${activity.id}`));
         }
     }
 
-    if (loadingInitial) return <LoadingComponent content='Loading activity...' />
+    if (loadingInitial) return <LoadingComponent content='Loading activity...' />;
 
     return (
         <Segment clearing>
@@ -56,7 +64,7 @@ export default observer(function ActivityForm() {
             <Formik
                 enableReinitialize
                 validationSchema={validationSchema}
-                initialValues={activity}
+                initialValues={activityState}
                 onSubmit={values => handleFormSubmit(values)}>
                 {({ handleSubmit, isValid, isSubmitting, dirty }) => (
                     <Form className='ui form' onSubmit={handleSubmit} autoComplete='off'>
@@ -67,7 +75,19 @@ export default observer(function ActivityForm() {
 
                         <Header content='Location Details' sub color='teal' />
                         <MyTextInput name='venue' placeholder='Venue' />
-                        <MyTextInput name='city' placeholder='city' />
+                        <MyTextInput name='city' placeholder='City' />
+
+                        {/* Ticket Details */}
+                        <MyTextInput name='ticketPrice' placeholder='Ticket Price' type='number' />
+                        <MyTextInput name='ticketQuantityAvailable' placeholder='Ticket Quantity Available' type='number' />
+                        <label>
+                            <input
+                                type='checkbox'
+                                checked={requiresPayment}
+                                onChange={(e) => setRequiresPayment(e.target.checked)}
+                            />
+                            Requires Payment
+                        </label>
 
                         <Button disabled={isSubmitting || !dirty || !isValid} loading={isSubmitting} floated='right' positive type='submit' content='Submit' />
                         <Button as={Link} to='/activities' floated='right' type='button' content='Cancel' />
@@ -75,5 +95,5 @@ export default observer(function ActivityForm() {
                 )}
             </Formik>
         </Segment>
-    )
-})
+    );
+});

@@ -81,13 +81,24 @@ const Activities = {
     update: (activity: ActivityFormValues) => requests.put<void>(`/activities/${activity.id}`, activity),
     delete: (id: string) => requests.del<void>(`/activities/${id}`),
     attend: (id: string) => requests.post<void>(`/activities/${id}/attend`, {}),
-    rate: (id: string, value: number) => requests.post<void>(`/activities/${id}/rate`, { value })
+    rate: (id: string, value: number) => requests.post<void>(`/activities/${id}/rate`, { value }),
+    purchaseTicket: (activityId: string) => 
+        requests.post<void>(`/activities/${activityId}/tickets`, {}),
+    makePayment: () => axios.post<void>(`/activities/payments`, {})
 }
 
+const Payments = {
+    createPaymentIntent: () => requests.post('payments', {}),
+    /* makePayment: () => requests.post('payment',{}) */
+}
 const Account = {
     current: () => requests.get<User>('/account'),
     login: (user: UserFormValues) => requests.post<User>('/account/login', user),
-    register: (user: UserFormValues) => requests.post<User>('/account/register', user)
+    register: (user: UserFormValues) => requests.post<User>('/account/register', user),
+    verifyEmail: (token: string, email: string) => 
+        requests.post<void>(`/account/verifyEmail?token=${token}&email=${email}`, {}),
+    resendEmailConfirm: (email: string) => 
+        requests.get(`/account/resendEmailConfirmationLink?email=${email}`)
 
 }
 
@@ -116,7 +127,8 @@ const Profiles = {
 const agent = {
     Activities,
     Account,
-    Profiles
+    Profiles,
+    Payments
 }
 
 export default agent;

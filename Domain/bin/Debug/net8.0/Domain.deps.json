@@ -10,7 +10,8 @@
         "dependencies": {
           "EFCore.AutomaticMigrations": "8.0.0",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "8.0.3",
-          "Microsoft.EntityFrameworkCore.Tools": "8.0.2"
+          "Microsoft.EntityFrameworkCore.Tools": "8.0.2",
+          "Stripe.net": "44.11.0"
         },
         "runtime": {
           "Domain.dll": {}
@@ -726,6 +727,26 @@
           }
         }
       },
+      "Newtonsoft.Json/12.0.3": {
+        "runtime": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {
+            "assemblyVersion": "12.0.0.0",
+            "fileVersion": "12.0.3.23909"
+          }
+        }
+      },
+      "Stripe.net/44.11.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "12.0.3",
+          "System.Configuration.ConfigurationManager": "6.0.1"
+        },
+        "runtime": {
+          "lib/net6.0/Stripe.net.dll": {
+            "assemblyVersion": "44.11.0.0",
+            "fileVersion": "44.11.0.0"
+          }
+        }
+      },
       "System.CodeDom/4.4.0": {
         "runtime": {
           "lib/netstandard2.0/System.CodeDom.dll": {
@@ -1324,6 +1345,20 @@
       "sha512": "sha512-KZYeKBET/2Z0gY1WlTAK7+RHTl7GSbtvTLDXEZZojUdAPqpQNDL6tHv7VUpqfX5VEOh+uRGKaZXkuD253nEOBQ==",
       "path": "mono.texttemplating/2.2.1",
       "hashPath": "mono.texttemplating.2.2.1.nupkg.sha512"
+    },
+    "Newtonsoft.Json/12.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6mgjfnRB4jKMlzHSl+VD+oUc1IebOZabkbyWj2RiTgWwYPPuaK1H97G1sHqGwPlS5npiF5Q0OrxN1wni2n5QWg==",
+      "path": "newtonsoft.json/12.0.3",
+      "hashPath": "newtonsoft.json.12.0.3.nupkg.sha512"
+    },
+    "Stripe.net/44.11.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-v93nRUs0KGrqbetHMKo28rRkuujaXq9Y3dUr5j4gO0R+l/hN/BnX6EVFGXOa5bCNYFGZXheJTszIFDTMdhKuRw==",
+      "path": "stripe.net/44.11.0",
+      "hashPath": "stripe.net.44.11.0.nupkg.sha512"
     },
     "System.CodeDom/4.4.0": {
       "type": "package",

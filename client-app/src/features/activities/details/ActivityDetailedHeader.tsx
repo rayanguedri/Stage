@@ -1,23 +1,27 @@
-import { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Link } from 'react-router-dom';
 import { Button, Header, Item, Segment, Image, Label, Rating, RatingProps } from 'semantic-ui-react';
 import { Activity } from "../../../app/models/activity";
 import { useStore } from '../../../app/stores/store';
+import { useState } from 'react';
 
 interface Props {
   activity: Activity
 }
 
 export default observer(function ActivityDetailedHeader({ activity }: Props) {
-  const { activityStore: { rateActivity, loading, cancelActivityToggle, updateAttendeance } } = useStore();
+  const { activityStore: { rateActivity, loading, cancelActivityToggle, updateAttendeance, purchaseTicket } } = useStore();
   const [userRating, setUserRating] = useState<number | undefined>(activity.averageRating);
 
   const handleRatingChange = (e: React.MouseEvent<HTMLDivElement>, { rating }: RatingProps) => {
-    if (typeof rating === 'number') { // Check if rating is a number
+    if (typeof rating === 'number') {
       setUserRating(rating);
-      rateActivity(activity.id, rating); // Update the rating in the store
+      rateActivity(activity.id, rating);
     }
+  };
+
+  const handlePurchaseTicket = () => {
+    purchaseTicket(activity.id);
   };
 
   return (
@@ -36,6 +40,7 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
                   content={activity.title}
                 />
                 <p>{activity.date?.toLocaleDateString()}</p>
+                {activity.requiresPayment && <p>Ticket Price: ${activity.ticketPrice}</p>}
                 <p>
                   Hosted by <strong> <Link to={`/profiles/${activity.Host?.username}`}>{activity.Host?.displayName}</Link> </strong>
                 </p>
@@ -44,7 +49,7 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
                   defaultRating={userRating || activity.averageRating}
                   maxRating={5}
                   disabled={loading}
-                  onRate={handleRatingChange} // Handle rating change
+                  onRate={handleRatingChange}
                 />
                 <span style={{ marginLeft: '10px' }}>{activity.averageRating.toFixed(1)}</span>
               </Item.Content>
@@ -53,6 +58,7 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
         </Segment>
       </Segment>
       <Segment clearing attached='bottom'>
+        <Button onClick={handlePurchaseTicket} color='green' floated='right'>Purchase Ticket</Button>
         {activity.isHost ? (
           <>
             <Button

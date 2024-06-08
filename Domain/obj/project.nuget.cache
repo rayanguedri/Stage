@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "pBXgQywh51ANPUaDmhGE/5kO3gDoZyxJeyaz+vW94iKvr47QV7lvIXOD2KCYrT0Kmy9Rexq592A4qzPXXLeSbw==",
+  "dgSpecHash": "zL5lOVttpBhHQ/D1+N6V6w5PhYRHYtX++SoL8skHlvjDZUVoRZjsMoThyVFC1vv8qaKw32kYRM1TOnDW8Xeijg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\RYANG\\Desktop\\PFE\\Stage\\Domain\\Domain.csproj",
+  "projectFilePath": "C:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Domain\\Domain.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\RYANG\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\RYANG\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
@@ -52,6 +52,8 @@
     "C:\\Users\\RYANG\\.nuget\\packages\\microsoft.sqlserver.server\\1.0.0\\microsoft.sqlserver.server.1.0.0.nupkg.sha512",
     "C:\\Users\\RYANG\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
     "C:\\Users\\RYANG\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
+    "C:\\Users\\RYANG\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\RYANG\\.nuget\\packages\\stripe.net\\44.11.0\\stripe.net.44.11.0.nupkg.sha512",
     "C:\\Users\\RYANG\\.nuget\\packages\\system.codedom\\4.4.0\\system.codedom.4.4.0.nupkg.sha512",
     "C:\\Users\\RYANG\\.nuget\\packages\\system.collections.immutable\\6.0.0\\system.collections.immutable.6.0.0.nupkg.sha512",
     "C:\\Users\\RYANG\\.nuget\\packages\\system.composition\\6.0.0\\system.composition.6.0.0.nupkg.sha512",

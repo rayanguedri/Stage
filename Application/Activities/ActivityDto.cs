@@ -1,4 +1,6 @@
 using Application.Comments;
+using System;
+using System.Collections.Generic;
 
 namespace Application.Activities
 {
@@ -16,5 +18,9 @@ namespace Application.Activities
         public ICollection<AttendeeDto> Attendees { get; set; }
         public ICollection<CommentDto> Comments { get; set; }
         public double AverageRating { get; set; }
+        public string TicketType { get; set; }
+        public decimal TicketPrice { get; set; }
+        public int TicketQuantitySold { get; set; }
+        public int TicketQuantityAvailable { get; set; }
     }
 }
