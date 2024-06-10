@@ -121,9 +121,8 @@ namespace API.Controllers
 
 
                 // this 2 pages will be implmented in front side (React)
-                SuccessUrl = "https://example.com/success",
-                CancelUrl = "https://example.com/cancel",
-            };
+            SuccessUrl = "http://localhost:3000/success",
+            CancelUrl = "http://localhost:3000/cancel",            };
 
             var service = new SessionService();
             Session session = service.Create(options);
@@ -131,5 +130,6 @@ namespace API.Controllers
             return Ok(new { sessionId = session.Id });
         }
     }
-    
-}
+
+
+    }

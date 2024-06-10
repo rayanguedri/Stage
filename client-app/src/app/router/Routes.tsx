@@ -11,6 +11,8 @@ import RequireAuth from "./RequireAuth";
 import ActivityWrapper from "../../features/activities/details/ActivityWrapper";
 import RegisterSuccess from "../../features/users/RegisterSuccess";
 import ConfirmEmail from "../../features/users/ConfirmEmail";
+import CancelPage from "../../features/redirect/CancelPage";
+import SuccessPage from "../../features/redirect/SuccessPage";
 
 export const routes: RouteObject[] = [
     {
@@ -25,7 +27,9 @@ export const routes: RouteObject[] = [
                     { path: 'createActivity', element: <ActivityForm key='create' /> },
                     { path: 'manage/:id', element: <ActivityForm key='manage' /> },
                     { path: 'profiles/:username', element: <ProfilePage /> },
-                    { path: 'payment/:activityId', element: <ActivityWrapper /> }, // Route for the payment form
+                    { path: 'payment/:activityId', element: <ActivityWrapper /> }, 
+                    {path: '/success' ,element: <SuccessPage />},
+                    {path: '/cancel' ,element: <CancelPage />},
                     { path: 'errors', element: <TestErrors /> },
                 ]
             },

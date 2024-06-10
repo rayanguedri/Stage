@@ -1,3 +1,4 @@
+using API.Controllers;
 using API.Extensions;
 using API.Middleware;
 using API.Services;
