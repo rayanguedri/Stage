@@ -306,6 +306,7 @@ export default class ActivityStore {
         await agent.Activities.makePayment()
         runInAction(() => {
             console.log("payment is good ")
+            
            /*  const activity = this.getActivity();
             if (activity) {
                 activity.ticketQuantitySold += 1; // Assuming ticket quantity sold increases by 1 on each purchase

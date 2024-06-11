@@ -8,11 +8,9 @@ public class Ticket
 
     public string Type { get; set; }
 
-
     public decimal Price { get; set; }
 
     public string PaymentIntentId { get; set; }
-
 
     public string Currency { get; set; }
 
