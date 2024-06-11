@@ -98,7 +98,11 @@ const Account = {
     verifyEmail: (token: string, email: string) => 
         requests.post<void>(`/account/verifyEmail?token=${token}&email=${email}`, {}),
     resendEmailConfirm: (email: string) => 
-        requests.get(`/account/resendEmailConfirmationLink?email=${email}`)
+        requests.get(`/account/resendEmailConfirmationLink?email=${email}`),
+    forgotPassword: (email: string) => 
+        requests.post<void>(`/account/forgotPassword?email=${email}`, {}),
+    resetPassword: (token: string, email: string, newPassword: string) =>
+        requests.post<void>(`/account/resetPassword?token=${token}&email=${email}&newPassword=${newPassword}`, {})
 
 }
 

@@ -68,4 +68,26 @@ export default class UserStore {
             console.log(error);
         }
      }
+
+     forgotPassword = async (email: string) => {
+        try {
+            await agent.Account.forgotPassword(email);
+            router.navigate('/forgot-password-success');
+        } catch (error) {
+            console.error('Forgot password error:', error);
+            throw error;
+        }
+    }
+
+    resetPassword = async (token: string, email: string, newPassword: string) => {
+        try {
+            await agent.Account.resetPassword(token, email, newPassword);
+            router.navigate('/reset-password-success');
+        } catch (error) {
+            console.error('Reset password error:', error);
+            throw error;
+        }
+    }
+
+    
 }

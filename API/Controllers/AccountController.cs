@@ -157,5 +157,61 @@ namespace API.Controllers
                 Username = user.UserName
             };
         }
+
+        [AllowAnonymous]
+        [HttpPost("forgotPassword")]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return BadRequest("User with this email does not exist.");
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            // Encode the token as Base64
+            var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+
+            var origin = Request.Headers["origin"];
+            var resetUrl = $"{origin}/reset-password/{encodedToken}";
+
+            var message = $"<p>Please click the below link to reset your password:</p><p><a href='{resetUrl}'>Click to reset password</a></p>";
+            await _emailSender.SendEmailAsync(email, "Reset Password", message);
+
+            return Ok("Passwrod reset link sent");
+
+            
+        }
+
+        [AllowAnonymous]
+        [HttpPost("resetPassword")]
+        public async Task<IActionResult> ResetPassword(string token, string email, string newPassword)
+        {
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(email))
+            {
+                return BadRequest("Token or email is missing.");
+            }
+
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return BadRequest("User not found for the given email.");
+            }
+
+            // Decode the token
+            var decodedTokenBytes = WebEncoders.Base64UrlDecode(token);
+            var decodedToken = Encoding.UTF8.GetString(decodedTokenBytes);
+
+            var result = await _userManager.ResetPasswordAsync(user, decodedToken, newPassword);
+            if (!result.Succeeded)
+            {
+                return BadRequest("Failed to reset password.");
+            }
+
+             return Redirect("/login");
+        }
     }
 }
+
+

@@ -13,6 +13,8 @@ import RegisterSuccess from "../../features/users/RegisterSuccess";
 import ConfirmEmail from "../../features/users/ConfirmEmail";
 import CancelPage from "../../features/redirect/CancelPage";
 import SuccessPage from "../../features/redirect/SuccessPage";
+import ResetPasswordForm from "../../features/users/ResetPasswordForm";
+import EmailSentPage from "../../features/redirect/EmailSentPage";
 
 export const routes: RouteObject[] = [
     {
@@ -28,13 +30,16 @@ export const routes: RouteObject[] = [
                     { path: 'manage/:id', element: <ActivityForm key='manage' /> },
                     { path: 'profiles/:username', element: <ProfilePage /> },
                     { path: 'payment/:activityId', element: <ActivityWrapper /> }, 
+                  
                     {path: '/success' ,element: <SuccessPage />},
                     {path: '/cancel' ,element: <CancelPage />},
                     { path: 'errors', element: <TestErrors /> },
                 ]
             },
             { path: 'not-found', element: <NotFound /> },
+            { path: 'reset-password/:token', element: <ResetPasswordForm /> },
             { path: 'server-error', element: <ServerError /> },
+            { path: 'email-sent', element: <EmailSentPage /> },
             {path: 'account/registerSuccess', element: <RegisterSuccess />},
             {path: 'account/verifyEmail', element: <ConfirmEmail />},
             { path: '*', element: <Navigate replace to='/not-found' /> },

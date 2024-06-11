@@ -46,7 +46,7 @@ if (app.Environment.IsDevelopment())
 // Ensure CORS is configured before authentication/authorization
 app.UseCors("CorsPolicy");
 
-app.UseHttpsRedirection(); // Added HTTPS redirection
+//app.UseHttpsRedirection(); // Added HTTPS redirection
 
 app.UseAuthentication();
 app.UseAuthorization();

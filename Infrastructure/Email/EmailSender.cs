@@ -27,5 +27,7 @@ namespace Infrastructure.Email
             message.SetClickTracking(false, false);
             await client.SendEmailAsync(message);
         } 
+
+        
     }
 }

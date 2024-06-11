@@ -4314,11 +4314,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Domain\\Domain.csproj",
+      "projectUniqueName": "C:\\Users\\RYANG\\Desktop\\trial\\Stage\\Domain\\Domain.csproj",
       "projectName": "Domain",
-      "projectPath": "c:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Domain\\Domain.csproj",
+      "projectPath": "C:\\Users\\RYANG\\Desktop\\trial\\Stage\\Domain\\Domain.csproj",
       "packagesPath": "C:\\Users\\RYANG\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\RYANG\\Desktop\\PFE - Copy\\Stage\\Domain\\obj\\",
+      "outputPath": "C:\\Users\\RYANG\\Desktop\\trial\\Stage\\Domain\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
