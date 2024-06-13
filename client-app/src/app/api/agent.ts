@@ -6,6 +6,8 @@ import { store } from '../stores/store';
 import { User, UserFormValues } from '../models/user';
 import { Photo, Profile, UserActivity } from '../models/profile';
 import { PaginatedResult } from '../models/pagination';
+import { Statistics } from '../models/statistics';
+
 
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
@@ -106,6 +108,10 @@ const Account = {
 
 }
 
+const StatisticsAPI = {
+    getStatistics: () => requests.get<Statistics>('/statistics')
+};
+
 const Profiles = {
     get: (username: string) => requests.get(`/profiles/${username}`),
     uploadPhoto: (file: Blob) => {
@@ -126,13 +132,12 @@ const Profiles = {
         requests.get<UserActivity[]>(`/profiles/${username}/activities?predicate=${predicate}`)
 }
 
-
-
 const agent = {
     Activities,
     Account,
     Profiles,
-    Payments
+    Payments,
+    StatisticsAPI
 }
 
 export default agent;

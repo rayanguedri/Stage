@@ -10,7 +10,7 @@ namespace API.Controllers
 {
     public class ActivitiesController : BaseApiController
     {
-          private readonly IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
 
         public ActivitiesController(IConfiguration configuration)
         {
@@ -29,7 +29,7 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new Details.Query { Id = id }));
         }
 
-         [HttpPost("{id}/tickets")] // Endpoint for purchasing tickets
+        [HttpPost("{id}/tickets")] // Endpoint for purchasing tickets
         public async Task<IActionResult> PurchaseTickets(Guid id, PurchaseTicket.Command command)
         {
             // Get the ID of the current user
@@ -68,10 +68,10 @@ namespace API.Controllers
         [HttpPost("{id}/attend")]
         public async Task<IActionResult> Attend(Guid id)
         {
-            return HandleResult(await Mediator.Send(new UpdateAttendance.Command{Id = id}));
+            return HandleResult(await Mediator.Send(new UpdateAttendance.Command { Id = id }));
         }
 
-         [HttpPost("{id}/rate")] // New endpoint for rating an activity
+        [HttpPost("{id}/rate")] // New endpoint for rating an activity
         public async Task<IActionResult> RateActivity(Guid id, Rate.Command command)
         {
             // Get the ID of the current user
@@ -85,9 +85,9 @@ namespace API.Controllers
 
             return HandleResult(await Mediator.Send(command));
         }
-    
- 
-         private const string StripeSecretKey = "sk_test_51PLpOJEWVw1xAHG0XXpo4Mu4BEiTsAJBSFONNnQEHOvU67kpg0ffAzdR4HiNoNFGGYEQl6pQyXBKBKlUunwz7EcL00VXy4cvNm";
+
+
+        private const string StripeSecretKey = "sk_test_51PLpOJEWVw1xAHG0XXpo4Mu4BEiTsAJBSFONNnQEHOvU67kpg0ffAzdR4HiNoNFGGYEQl6pQyXBKBKlUunwz7EcL00VXy4cvNm";
 
         [HttpPost("payments/create-checkout-session")]
         [AllowAnonymous]
@@ -121,15 +121,20 @@ namespace API.Controllers
 
 
                 // this 2 pages will be implmented in front side (React)
-            SuccessUrl = "http://localhost:3000/success",
-            CancelUrl = "http://localhost:3000/cancel",            };
+                SuccessUrl = "http://localhost:3000/success",
+                CancelUrl = "http://localhost:3000/cancel",
+            };
 
             var service = new SessionService();
             Session session = service.Create(options);
 
             return Ok(new { sessionId = session.Id });
         }
+
+        
     }
 
+  
 
-    }
+
+}

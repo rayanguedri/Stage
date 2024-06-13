@@ -6,6 +6,7 @@ import { v4 as uuid } from 'uuid';
 import { store } from "./store";
 import { Profile } from "../models/profile";
 import { Pagination, PagingParams } from "../models/pagination";
+import { Statistics } from "../models/statistics"; 
 
 
 export default class ActivityStore {
@@ -14,9 +15,11 @@ export default class ActivityStore {
     editMode = false;
     loading = false;
     loadingInitial = false;
+    statistics: Statistics | null = null;
     pagination: Pagination | null = null;
     pagingParams = new PagingParams();
     predicate = new Map().set('all', true); // tfiltri bel date
+   
 
     constructor() {
         makeAutoObservable(this)
@@ -26,6 +29,7 @@ export default class ActivityStore {
                 this.pagingParams = new PagingParams();
                 this.activityRegistry.clear();
                 this.loadActivities();
+                this.loadStatistics(); 
             }
         )
     }
@@ -316,7 +320,16 @@ export default class ActivityStore {
         } catch (error) {
             console.error('Error initiating payment:', error);
         }
-    
-
     }
+
+    loadStatistics = async () => {
+        try {
+            const statistics = await agent.StatisticsAPI.getStatistics();
+            runInAction(() => {
+                this.statistics = statistics;
+            });
+        } catch (error) {
+            console.error('Error loading statistics:', error);
+        }
+    };
 }
