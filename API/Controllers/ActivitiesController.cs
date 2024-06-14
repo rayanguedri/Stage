@@ -91,7 +91,7 @@ namespace API.Controllers
 
         [HttpPost("payments/create-checkout-session")]
         [AllowAnonymous]
-        public IActionResult CreateCheckoutSession()
+        public IActionResult CreateCheckoutSession(Activity activity)
         {
             StripeConfiguration.ApiKey = StripeSecretKey;
 
@@ -107,11 +107,11 @@ namespace API.Controllers
                     {
                         PriceData = new SessionLineItemPriceDataOptions
                         {
-                            UnitAmount = 2000,
+                            UnitAmount = activity.TicketQuantityAvailable*100,
                             Currency = "usd",
                             ProductData = new SessionLineItemPriceDataProductDataOptions
                             {
-                                Name = "T-shirt",
+                                Name = activity.Title,
                             },
                         },
                         Quantity = 1,

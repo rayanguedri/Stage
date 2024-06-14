@@ -13,8 +13,8 @@ interface Props {
 const ActivityDetailedHeader: React.FC<Props> = observer(({ activity }) => {
   const { activityStore: { rateActivity, loading, cancelActivityToggle, updateAttendeance, purchaseTicket } } = useStore();
   const [userRating, setUserRating] = useState<number | undefined>(activity.averageRating);
-  const stripePromise = loadStripe('pk_test_51PLpOJEWVw1xAHG0Zz5XGWA6BDOk4ndH1EVWhDE4HduJHwkc7ERxwhfsDMO50sdK5DO3NQH40e5mFhV4dM1d4z20009Uy9Fkix');
   const [ticketPurchased, setTicketPurchased] = useState<boolean>(false);
+  const stripePromise = loadStripe('pk_test_51PLpOJEWVw1xAHG0Zz5XGWA6BDOk4ndH1EVWhDE4HduJHwkc7ERxwhfsDMO50sdK5DO3NQH40e5mFhV4dM1d4z20009Uy9Fkix');
 
   useEffect(() => {
     const checkTicketPurchased = async () => {
@@ -27,10 +27,6 @@ const ActivityDetailedHeader: React.FC<Props> = observer(({ activity }) => {
   }, [activity.id]);
 
   const checkUserPurchasedTicket = async (activityId: string) => {
-    // Implement logic to check if the user has purchased a ticket
-    // This could involve querying the database or some other method
-    // For demonstration, I'll assume the check is done through an API call
-
     try {
       const response = await fetch(`http://localhost:5000/api/activities/tickets/check?activityId=${activityId}`);
       if (!response.ok) {
@@ -61,7 +57,8 @@ const ActivityDetailedHeader: React.FC<Props> = observer(({ activity }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify(activity) // Pass activity data to backend
       });
 
       if (!response.ok) {
@@ -124,7 +121,14 @@ const ActivityDetailedHeader: React.FC<Props> = observer(({ activity }) => {
         </Segment>
       </Segment>
       <Segment clearing attached='bottom'>
-        <Button onClick={handlePaymentSubmit} color='green' floated='right'>Purchase Ticket</Button>
+        <Button
+          onClick={handlePaymentSubmit}
+          color='green'
+          floated='right'
+          disabled={ticketPurchased || activity.isCancelled} // Disable if ticket is already purchased or activity is cancelled
+        >
+          {ticketPurchased ? 'Ticket Purchased' : 'Purchase Ticket'}
+        </Button>
         {activity.isHost ? (
           <>
             <Button
