@@ -22,7 +22,7 @@ const StatisticsPage = () => {
 
     return (
         <div>
-            <h1>Success Page</h1>
+            <h1>Website statistics</h1>
             {statistics && (
                 <div>
                     <p>Total Activities: {statistics.totalActivities}</p>
