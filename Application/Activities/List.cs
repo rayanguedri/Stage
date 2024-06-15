@@ -4,15 +4,19 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
 using Persistence;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Application.Activities
 {
     public class List
     {
-        public class Query : IRequest<Result<PagedList<ActivityDto>>> {
+        public class Query : IRequest<Result<PagedList<ActivityDto>>>
+        {
             public ActivityParams Params { get; set; }
-
-         }
+            public string SearchTerm { get; set; } // New property for search
+        }
 
         public class Handler : IRequestHandler<Query, Result<PagedList<ActivityDto>>>
         {
@@ -32,8 +36,17 @@ namespace Application.Activities
                 var query = _context.Activities
                     .Where(d => d.Date >= request.Params.StartDate)
                     .OrderBy(d => d.Date)
-                    .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider, new{currentUsername = _userAccessor.GetUsername()})
+                    .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider, new { currentUsername = _userAccessor.GetUsername() })
                     .AsQueryable();
+
+                if (!string.IsNullOrEmpty(request.SearchTerm))
+                {
+                    var searchTerm = request.SearchTerm.ToLower();
+                    query = query.Where(a =>
+                        a.Title.ToLower().Contains(searchTerm) ||
+                        a.Category.ToLower().Contains(searchTerm)
+                    );
+                }
 
                 if (request.Params.IsGoing && !request.Params.IsHost)
                 {

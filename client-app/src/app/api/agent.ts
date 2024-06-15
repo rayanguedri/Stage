@@ -86,8 +86,11 @@ const Activities = {
     rate: (id: string, value: number) => requests.post<void>(`/activities/${id}/rate`, { value }),
     purchaseTicket: (activityId: string) => 
         requests.post<void>(`/activities/${activityId}/tickets`, {}),
-    makePayment: () => axios.post<void>(`/activities/payments`, {})
+    makePayment: () => axios.post<void>(`/activities/payments`, {}),
+    search: (searchTerm: string, params: URLSearchParams) =>
+        axios.get<PaginatedResult<Activity[]>>(`/activities/search?searchTerm=${searchTerm}`, { params }).then(responseBody)
 }
+
 
 const Payments = {
     createPaymentIntent: () => requests.post('payments', {}),

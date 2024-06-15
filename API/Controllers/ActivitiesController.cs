@@ -1,4 +1,5 @@
 using Application.Activities;
+using Application.Core;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,10 +19,23 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetActivities([FromQuery] ActivityParams param)
-        {
-            return HandlePagedResult(await Mediator.Send(new List.Query { Params = param }));
-        }
+public async Task<IActionResult> GetActivities([FromQuery] ActivityParams param, string searchTerm)
+{
+    Result<PagedList<ActivityDto>> result;
+    
+    if (!string.IsNullOrEmpty(searchTerm))
+    {
+        // If searchTerm is provided, filter activities by title
+        result = await Mediator.Send(new List.Query { Params = param, SearchTerm = searchTerm });
+    }
+    else
+    {
+        // Otherwise, return all activities
+        result = await Mediator.Send(new List.Query { Params = param });
+    }
+
+    return HandlePagedResult<ActivityDto>(result);
+}
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetActivity(Guid id)

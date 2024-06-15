@@ -19,6 +19,7 @@ export default class ActivityStore {
     pagination: Pagination | null = null;
     pagingParams = new PagingParams();
     predicate = new Map().set('all', true); // tfiltri bel date
+    searchQuery: string = '';
    
 
     constructor() {
@@ -40,7 +41,7 @@ export default class ActivityStore {
 
     setPredicate = (predicate: string, value: string | Date) => {
         const resetPredicate = () => {
-            this.predicate.forEach((value, key) => {
+            this.predicate.forEach((_value, key) => {
                 if (key !== 'startDate') this.predicate.delete(key);
             })
         }
@@ -64,20 +65,50 @@ export default class ActivityStore {
         }
     }
 
+    setSearchQuery = (query: string) => {
+        this.searchQuery = query;
+        this.pagingParams = new PagingParams();
+        this.activityRegistry.clear();
+        this.loadActivities();
+    }
+
+    clearSearchQuery = () => {
+        this.searchQuery = '';
+    }
     get axiosParams() {
         const params = new URLSearchParams();
         params.append('pageNumber', this.pagingParams.pageNumber.toString());
         params.append('pageSize', this.pagingParams.pageSize.toString());
         this.predicate.forEach((value, key) => {
             if (key === 'startDate') {
-                params.append(key, (value as Date).toISOString())
+                params.append(key, (value as Date).toISOString());
             } else {
                 params.append(key, value);
             }
-        })
+        });
+        if (this.searchQuery) {
+            params.append('searchTerm', this.searchQuery);
+        }
         return params;
     }
 
+    searchActivities = async () => {
+        this.setLoadingInitial(true);
+        try {
+            const result = await agent.Activities.list(this.axiosParams);
+            runInAction(() => {
+                this.activityRegistry.clear();
+                result.data.forEach(activity => {
+                    this.setActivity(activity);
+                });
+                this.setPagination(result.pagination);
+                this.setLoadingInitial(false);
+            });
+        } catch (error) {
+            console.log('Error searching activities:', error);
+            this.setLoadingInitial(false);
+        }
+    }
     get groupedActivities() {
         return Object.entries(
             this.activitiesByDate.reduce((activities, activity) => {
