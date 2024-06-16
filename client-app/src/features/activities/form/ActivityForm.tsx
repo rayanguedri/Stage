@@ -16,7 +16,7 @@ import { categoryOptions } from '../../../app/common/options/categoryOptions';
 
 export default observer(function ActivityForm() {
     const { activityStore } = useStore();
-    const { createActivity, updateActivity, loadActivity, loadingInitial } = activityStore;
+    const { createActivity, updateActivity, loadActivity, deleteActivity, loadingInitial } = activityStore;
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -29,7 +29,6 @@ export default observer(function ActivityForm() {
         description: Yup.string().required(),
         date: Yup.string().required('Date is required').nullable(),
         venue: Yup.string().required(),
-      
     });
 
     useEffect(() => {
@@ -53,6 +52,13 @@ export default observer(function ActivityForm() {
             createActivity(newActivity).then(() => navigate(`/activities/${newActivity.id}`));
         } else {
             updateActivity(updatedActivity).then(() => navigate(`/activities/${activity.id}`));
+        }
+    }
+
+    // New function to handle delete
+    function handleDeleteActivity() {
+        if (id) {
+            deleteActivity(id).then(() => navigate('/activities'));
         }
     }
 
@@ -91,6 +97,17 @@ export default observer(function ActivityForm() {
 
                         <Button disabled={isSubmitting || !dirty || !isValid} loading={isSubmitting} floated='right' positive type='submit' content='Submit' />
                         <Button as={Link} to='/activities' floated='right' type='button' content='Cancel' />
+
+                        {/* Delete button, visible only if editing an existing activity */}
+                        {id && (
+                            <Button
+                                floated='left'
+                                type='button'
+                                color='red'
+                                content='Delete'
+                                onClick={handleDeleteActivity}
+                            />
+                        )}
                     </Form>
                 )}
             </Formik>
