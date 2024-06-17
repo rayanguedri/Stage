@@ -22,5 +22,6 @@ namespace Application.Activities
         public decimal TicketPrice { get; set; }
         public int TicketQuantitySold { get; set; }
         public int TicketQuantityAvailable { get; set; }
+       public bool RequiresPayment { get; set; }
     }
 }

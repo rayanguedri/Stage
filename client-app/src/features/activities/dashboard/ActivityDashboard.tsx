@@ -32,7 +32,9 @@ export default observer(function ActivityDashboard() {
     }
 
     return (
+        
         <Grid>
+            
             <Grid.Column width='10'>
                 <Input
                     fluid

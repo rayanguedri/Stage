@@ -41,7 +41,7 @@ const ActivityDetailedHeader: React.FC<Props> = observer(({ activity }) => {
     }
   };
 
-  const handleRatingChange = (e: React.MouseEvent<HTMLDivElement>, { rating }: RatingProps) => {
+  const handleRatingChange = (_e: React.MouseEvent<HTMLDivElement>, { rating }: RatingProps) => {
     if (typeof rating === 'number') {
       setUserRating(rating);
       rateActivity(activity.id, rating);
@@ -103,7 +103,16 @@ const ActivityDetailedHeader: React.FC<Props> = observer(({ activity }) => {
                   content={activity.title}
                 />
                 <p>{activity.date?.toLocaleDateString()}</p>
-                {activity.requiresPayment && <p>Ticket Price: ${activity.ticketPrice}</p>}
+
+
+                {activity.requiresPayment ? (
+                <>
+                    <p>Price: {activity.ticketPrice}€</p>
+                    <p>{activity.ticketQuantitySold} tickets sold out of {activity.ticketQuantityAvailable}</p>
+                </>
+            ) : (
+                <p>Free</p>
+            )}
                 <p>
                   Hosted by <strong> <Link to={`/profiles/${activity.Host?.username}`}>{activity.Host?.displayName}</Link> </strong>
                 </p>
