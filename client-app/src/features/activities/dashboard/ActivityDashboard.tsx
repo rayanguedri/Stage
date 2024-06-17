@@ -32,26 +32,26 @@ export default observer(function ActivityDashboard() {
     }
 
     return (
-        
         <Grid>
-            
             <Grid.Column width='10'>
-                <Input
-                    fluid
-                    icon='search'
-                    placeholder='Search...'
-                    value={searchQuery}
-                    onChange={handleSearchInputChange}
-                    action={{
-                        icon: 'close',
-                        onClick: handleClearSearch,
-                        disabled: !searchQuery,
-                        circular: true,
-                    }}
-                    onKeyDown={(e: { key: string; stopPropagation: () => void; }) => {
-                        if (e.key === ' ') e.stopPropagation();
-                    }}
-                />
+                <div style={{ marginBottom: '10px' }}>
+                    <Input
+                        fluid
+                        icon='search'
+                        placeholder='Search...'
+                        value={searchQuery}
+                        onChange={handleSearchInputChange}
+                        action={{
+                            icon: 'close',
+                            onClick: handleClearSearch,
+                            disabled: !searchQuery,
+                            circular: true,
+                        }}
+                        onKeyDown={(e: { key: string; stopPropagation: () => void; }) => {
+                            if (e.key === ' ') e.stopPropagation();
+                        }}
+                    />
+                </div>
                 {activityStore.loadingInitial && !loadingNext ? (
                     <>
                         <ActivityListItemPlaceholder />
