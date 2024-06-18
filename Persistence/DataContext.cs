@@ -17,12 +17,14 @@ namespace Persistence
         public DbSet<UserFollowing> UserFollowings { get; set; }
         public DbSet<Rating> Ratings { get; set; } 
         public DbSet<Ticket> Tickets { get; set; }
+         public DbSet<StripeSession> StripeSessions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
             builder.Entity<ActivityAttendee>(x => x.HasKey(aa => new { aa.AppUserId, aa.ActivityId }));
+             builder.Entity<StripeSession>().Property(s => s.SessionId).IsRequired();
 
             builder.Entity<ActivityAttendee>()
                 .HasOne(u => u.AppUser)
@@ -38,6 +40,8 @@ namespace Persistence
                 .HasOne(a => a.Activity)
                 .WithMany(c => c.Comments)
                 .OnDelete(DeleteBehavior.Cascade);
+
+                
 
             builder.Entity<UserFollowing>(b =>
             {
