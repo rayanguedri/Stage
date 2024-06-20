@@ -1,9 +1,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Stripe;
 using Stripe.Checkout;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 using Domain; // Add this line
 using Persistence; // Add this line
+using Microsoft.AspNetCore.Identity; // Add this line
 
 namespace API.Controllers
 {
@@ -15,11 +20,13 @@ namespace API.Controllers
         private const string StripeWebhookSecret = "whsec_147d74a738bdeaec86c400d92f8b2d19ec409c4ef3bbb9a8aa193183b224e78d";
         private readonly ILogger<WebhookController> _logger;
         private readonly DataContext _context; // Modify this line
+        private readonly UserManager<AppUser> _userManager; // Add this line
 
-        public WebhookController(ILogger<WebhookController> logger, DataContext context) // Modify constructor
+        public WebhookController(ILogger<WebhookController> logger, DataContext context, UserManager<AppUser> userManager) // Modify constructor
         {
             _logger = logger;
             _context = context; // Assign the context
+            _userManager = userManager; // Assign the user manager
         }
 
         [HttpPost]
@@ -71,13 +78,17 @@ namespace API.Controllers
             _logger.LogInformation($"Customer Email: {customerEmail}");
             _logger.LogInformation($"Payment Intent ID: {paymentIntentId}");
 
+            // Find user by email
+            var user = await _userManager.FindByEmailAsync(customerEmail);
+
             // Create and save the StripeSession entity
             var stripeSession = new StripeSession
             {
                 SessionId = session.Id,
                 CustomerEmail = customerEmail,
                 PaymentIntentId = paymentIntentId,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                UserId = user?.Id // Associate user if found
             };
 
             _context.StripeSessions.Add(stripeSession); // Add session to context

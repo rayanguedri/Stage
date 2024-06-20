@@ -12,5 +12,7 @@ namespace Domain
         public string CustomerEmail { get; set; }
         public string PaymentIntentId { get; set; }
         public DateTime CreatedAt { get; set; }
+        public string UserId { get; set; } 
+        public AppUser User { get; set; } 
     }
 }
