@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Persistence;
@@ -11,9 +12,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240621110445_tededu")]
+    partial class tededu
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -428,17 +431,17 @@ namespace Persistence.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric");
 
-                    b.Property<string>("Type")
+                    b.Property<string>("PurchaserId")
                         .HasColumnType("text");
 
-                    b.Property<string>("UserId")
+                    b.Property<string>("Type")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ActivityId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("PurchaserId");
 
                     b.ToTable("Tickets");
                 });
@@ -584,8 +587,9 @@ namespace Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
+                        .WithMany("Tickets")
+                        .HasForeignKey("PurchaserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Activity");
 
@@ -612,6 +616,8 @@ namespace Persistence.Migrations
                     b.Navigation("Followings");
 
                     b.Navigation("Photos");
+
+                    b.Navigation("Tickets");
                 });
 #pragma warning restore 612, 618
         }

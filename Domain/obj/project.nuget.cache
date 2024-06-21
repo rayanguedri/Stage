@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "P1wSWazllIjncF1+KSuKpFKdoCry5/mcxrBp21jvFLYfGCRJJK18EemnsoZT+rh1raoA+RqqLmsWAPYR2LbO9w==",
+  "dgSpecHash": "0rthuzEtxTU/7DZvJagD+CgiwwpwIB/NsA8Yp1cvY2U5+oVsS2KmOtqzRj5M57kVZ5EIiHgcRbfsHF+bckLmdg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\RYANG\\Desktop\\next\\Stage\\Domain\\Domain.csproj",
+  "projectFilePath": "C:\\Users\\RYANG\\Desktop\\next trial\\New folder\\Stage\\Domain\\Domain.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\RYANG\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\RYANG\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",

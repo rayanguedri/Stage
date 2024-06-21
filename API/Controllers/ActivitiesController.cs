@@ -44,19 +44,32 @@ public async Task<IActionResult> GetActivities([FromQuery] ActivityParams param,
         }
 
         [HttpPost("{id}/tickets")] // Endpoint for purchasing tickets
-        public async Task<IActionResult> PurchaseTickets(Guid id, PurchaseTicket.Command command)
-        {
-            // Get the ID of the current user
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+[Authorize] // Ensure user is authenticated
+public async Task<IActionResult> PurchaseTickets(Guid id, [FromBody] PurchaseTicket.Command command)
+{
+    // Get the ID of the current user
+    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Pass the user ID to the command
-            command.UserId = userId;
+    // Pass the user ID to the command
+    command.UserId = userId;
 
-            // Set the activity ID
-            command.ActivityId = id;
+    // Set the activity ID
+    command.ActivityId = id;
 
-            return HandleResult(await Mediator.Send(command));
-        }
+    // Send the command to the MediatR handler
+    var result = await Mediator.Send(command);
+
+    // Handle the result and return appropriate response
+    if (result.IsSuccess)
+    {
+        return Ok(); // Or return any success response as needed
+    }
+    else
+    {
+        return BadRequest(result.Error); // Or return any failure response as needed
+    }
+}
+
 
         [HttpPost]
         public async Task<IActionResult> CreateActivity(Activity activity)

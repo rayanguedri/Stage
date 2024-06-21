@@ -14,6 +14,6 @@ public class Ticket
 
     public string Currency { get; set; }
 
-    public Guid? PurchaserId { get; set; }
-
+    public string UserId { get; set; }
+    public AppUser User { get; set; }
 }

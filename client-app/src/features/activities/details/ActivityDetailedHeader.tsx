@@ -128,6 +128,8 @@ const ActivityDetailedHeader: React.FC<Props> = observer(({ activity }) => {
             </Item>
           </Item.Group>
         </Segment>
+        <Button onClick={() => purchaseTicket(activity.id)}>Purchase Ticket</Button>
+
       </Segment>
       <Segment clearing attached='bottom'>
         <Button
