@@ -1,5 +1,6 @@
 using Application.Activities;
 using Application.Core;
+using Application.Tickets;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,23 +20,23 @@ namespace API.Controllers
         }
 
         [HttpGet]
-public async Task<IActionResult> GetActivities([FromQuery] ActivityParams param, string searchTerm)
-{
-    Result<PagedList<ActivityDto>> result;
-    
-    if (!string.IsNullOrEmpty(searchTerm))
-    {
-        // If searchTerm is provided, filter activities by title
-        result = await Mediator.Send(new List.Query { Params = param, SearchTerm = searchTerm });
-    }
-    else
-    {
-        // Otherwise, return all activities
-        result = await Mediator.Send(new List.Query { Params = param });
-    }
+        public async Task<IActionResult> GetActivities([FromQuery] ActivityParams param, string searchTerm)
+        {
+            Result<PagedList<ActivityDto>> result;
 
-    return HandlePagedResult<ActivityDto>(result);
-}
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                // If searchTerm is provided, filter activities by title
+                result = await Mediator.Send(new List.Query { Params = param, SearchTerm = searchTerm });
+            }
+            else
+            {
+                // Otherwise, return all activities
+                result = await Mediator.Send(new List.Query { Params = param });
+            }
+
+            return HandlePagedResult<ActivityDto>(result);
+        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetActivity(Guid id)
@@ -44,32 +45,37 @@ public async Task<IActionResult> GetActivities([FromQuery] ActivityParams param,
         }
 
         [HttpPost("{id}/tickets")] // Endpoint for purchasing tickets
-[Authorize] // Ensure user is authenticated
-public async Task<IActionResult> PurchaseTickets(Guid id, [FromBody] PurchaseTicket.Command command)
-{
-    // Get the ID of the current user
-    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        public async Task<IActionResult> PurchaseTickets(Guid id, PurchaseTicket.Command command)
+        {
+            // Get the ID of the current user
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-    // Pass the user ID to the command
-    command.UserId = userId;
+            // Pass the user ID to the command
+            command.UserId = userId;
 
-    // Set the activity ID
-    command.ActivityId = id;
+            // Set the activity ID
+            command.ActivityId = id;
 
-    // Send the command to the MediatR handler
-    var result = await Mediator.Send(command);
+            return HandleResult(await Mediator.Send(command));
+        }
 
-    // Handle the result and return appropriate response
-    if (result.IsSuccess)
-    {
-        return Ok(); // Or return any success response as needed
-    }
-    else
-    {
-        return BadRequest(result.Error); // Or return any failure response as needed
-    }
-}
 
+        [HttpGet("{activityId}/has-purchased")]
+        [Authorize]
+        public async Task<IActionResult> CheckIfUserHasPurchased(Guid activityId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var query = new CheckIfUserHasPurchasedTicket.Query
+            {
+                ActivityId = activityId,
+                UserId = userId
+            };
+
+            var hasPurchased = await Mediator.Send(query);
+
+            return Ok(hasPurchased);
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreateActivity(Activity activity)
@@ -158,10 +164,10 @@ public async Task<IActionResult> PurchaseTickets(Guid id, [FromBody] PurchaseTic
             return Ok(new { sessionId = session.Id });
         }
 
-        
+
     }
 
-  
+
 
 
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Link } from 'react-router-dom';
 import { Button, Header, Item, Segment, Image, Label, Rating, RatingProps } from 'semantic-ui-react';
@@ -7,7 +7,7 @@ import { useStore } from '../../../app/stores/store';
 import { loadStripe } from '@stripe/stripe-js';
 
 interface Props {
-  activity: Activity
+  activity: Activity;
 }
 
 const ActivityDetailedHeader: React.FC<Props> = observer(({ activity }) => {
@@ -17,29 +17,38 @@ const ActivityDetailedHeader: React.FC<Props> = observer(({ activity }) => {
   const stripePromise = loadStripe('pk_test_51PLpOJEWVw1xAHG0Zz5XGWA6BDOk4ndH1EVWhDE4HduJHwkc7ERxwhfsDMO50sdK5DO3NQH40e5mFhV4dM1d4z20009Uy9Fkix');
 
   useEffect(() => {
-    const checkTicketPurchased = async () => {
-      // Check if the user has purchased a ticket for this activity
-      const ticketPurchased = await checkUserPurchasedTicket(activity.id);
-      setTicketPurchased(ticketPurchased);
+    const checkTicketPurchase = async () => {
+      console.log("Checking ticket purchase status...");
+      try {
+        const token = localStorage.getItem('jwt'); // Adjust key if your token is stored differently
+        if (!token) {
+          throw new Error("No token found");
+        }
+
+        const response = await fetch(`http://localhost:5000/api/activities/${activity.id}/has-purchased`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          credentials: 'include'
+        });
+
+        console.log('Response status:', response.status);
+        if (!response.ok) {
+          throw new Error(`Failed to check ticket purchase status: ${response.statusText}`);
+        }
+
+        const hasPurchased = await response.json();
+        setTicketPurchased(hasPurchased);
+        console.log(`Ticket purchased for activity ${activity.id}:`, hasPurchased);
+      } catch (error) {
+        console.error('Error checking ticket purchase status:', error);
+      }
     };
 
-    checkTicketPurchased();
+    checkTicketPurchase();
   }, [activity.id]);
-
-  const checkUserPurchasedTicket = async (activityId: string) => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/activities/tickets/check?activityId=${activityId}`);
-      if (!response.ok) {
-        throw new Error('Failed to check ticket status');
-      }
-
-      const { ticketPurchased } = await response.json();
-      return ticketPurchased;
-    } catch (error) {
-      console.error('Error checking ticket status:', error);
-      return false;
-    }
-  };
 
   const handleRatingChange = (_e: React.MouseEvent<HTMLDivElement>, { rating }: RatingProps) => {
     if (typeof rating === 'number') {
@@ -52,13 +61,12 @@ const ActivityDetailedHeader: React.FC<Props> = observer(({ activity }) => {
     try {
       console.log("Initiating payment...");
 
-      // Create a checkout session
       const response = await fetch('http://localhost:5000/api/activities/payments/create-checkout-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(activity) // Pass activity data to backend
+        body: JSON.stringify(activity)
       });
 
       if (!response.ok) {
@@ -68,10 +76,8 @@ const ActivityDetailedHeader: React.FC<Props> = observer(({ activity }) => {
       const { sessionId } = await response.json();
       console.log('Payment Successful', sessionId);
 
-      // Call purchaseTicket function
       purchaseTicket(activity.id);
 
-      // Redirect to the Stripe checkout page
       const stripe = await stripePromise;
       if (!stripe) return console.log('Stripe is not loaded');
       const { error } = await stripe.redirectToCheckout({ sessionId });
@@ -90,7 +96,7 @@ const ActivityDetailedHeader: React.FC<Props> = observer(({ activity }) => {
         {activity.isCancelled &&
           <Label style={{ position: 'absolute', zIndex: 1000, left: -14, top: 20 }} ribbon color='red' content='Cancelled' />
         }
-        {ticketPurchased && // Show header if ticket is purchased
+        {ticketPurchased && 
           <Header as='h2' color='green' attached='top'>Ticket Purchased</Header>
         }
         <Image src={`/assets/categoryImages/${activity.category}.jpg`} fluid />
@@ -104,15 +110,14 @@ const ActivityDetailedHeader: React.FC<Props> = observer(({ activity }) => {
                 />
                 <p>{activity.date?.toLocaleDateString()}</p>
 
-
                 {activity.requiresPayment ? (
-                <>
+                  <>
                     <p>Price: {activity.ticketPrice}€</p>
                     <p>{activity.ticketQuantitySold} tickets sold out of {activity.ticketQuantityAvailable}</p>
-                </>
-            ) : (
-                <p>Free</p>
-            )}
+                  </>
+                ) : (
+                  <p>Free</p>
+                )}
                 <p>
                   Hosted by <strong> <Link to={`/profiles/${activity.Host?.username}`}>{activity.Host?.displayName}</Link> </strong>
                 </p>
@@ -128,15 +133,13 @@ const ActivityDetailedHeader: React.FC<Props> = observer(({ activity }) => {
             </Item>
           </Item.Group>
         </Segment>
-        <Button onClick={() => purchaseTicket(activity.id)}>Purchase Ticket</Button>
-
       </Segment>
       <Segment clearing attached='bottom'>
         <Button
           onClick={handlePaymentSubmit}
           color='green'
           floated='right'
-          disabled={ticketPurchased || activity.isCancelled} // Disable if ticket is already purchased or activity is cancelled
+          disabled={ticketPurchased || activity.isCancelled}
         >
           {ticketPurchased ? 'Ticket Purchased' : 'Purchase Ticket'}
         </Button>

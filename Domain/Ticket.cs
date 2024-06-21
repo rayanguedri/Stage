@@ -16,4 +16,5 @@ public class Ticket
 
     public string UserId { get; set; }
     public AppUser User { get; set; }
+     public bool HasPurchased { get; set; }
 }

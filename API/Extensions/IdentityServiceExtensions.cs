@@ -65,7 +65,7 @@ namespace API.Extensions
 
             services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
             services.AddScoped<TokenService>();
-            services.AddHttpContextAccessor();
+           // services.AddHttpContextAccessor();
 
             return services;
         }

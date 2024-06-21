@@ -19,7 +19,8 @@ export interface IActivity {
   ticketPrice: number;
   ticketQuantitySold: number;
   ticketQuantityAvailable: number;
-  requiresPayment: boolean; // Added requiresPayment
+  requiresPayment: boolean;
+  userHasPurchased: boolean;
 }
 
 export class Activity implements IActivity {
@@ -36,7 +37,8 @@ export class Activity implements IActivity {
     this.ticketPrice = init.ticketPrice;
     this.ticketQuantitySold = init.ticketQuantitySold;
     this.ticketQuantityAvailable = init.ticketQuantityAvailable;
-    this.requiresPayment = false; // Initialize requiresPayment
+    this.requiresPayment = false;
+    this.userHasPurchased = false;
   }
 
   id: string;
@@ -57,7 +59,8 @@ export class Activity implements IActivity {
   ticketPrice: number = 0;
   ticketQuantitySold: number = 0;
   ticketQuantityAvailable: number = 0;
-  requiresPayment: boolean; // Added requiresPayment
+  requiresPayment: boolean; 
+  userHasPurchased: boolean;
 
   get averageRating(): number {
     if (!this.ratings || this.ratings.length === 0) {
@@ -85,6 +88,7 @@ export class ActivityFormValues {
   ticketQuantitySold: number = 0;
   ticketQuantityAvailable: number = 0;
   requiresPayment: boolean = false;
+  userHasPurchased: boolean = false;
 
   constructor(activity?: ActivityFormValues) {
     if (activity) {
@@ -100,6 +104,7 @@ export class ActivityFormValues {
       this.ticketQuantitySold = activity.ticketQuantitySold;
       this.ticketQuantityAvailable = activity.ticketQuantityAvailable;
       this.requiresPayment = activity.requiresPayment;
+      this.userHasPurchased = activity.userHasPurchased;
     }
   }
 }
@@ -110,3 +115,4 @@ export interface Rating {
   activityId: string;
   value: number;
 }
+

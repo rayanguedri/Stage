@@ -276,7 +276,7 @@ export default class ActivityStore {
             runInAction(() => this.loading = false);
         }
     }
-
+    
 
     clearSelectedActivity = () => {
         this.selectedActivity = undefined;
@@ -319,6 +319,28 @@ export default class ActivityStore {
             console.log('Error rating activity: ', error);
         }
     }
+
+    checkIfUserPurchasedTicket = async (activityId: string) => {
+        try {
+            const user = store.userStore.user;
+            if (!user) {
+                return;
+            }
+
+            const hasPurchased = await agent.Activities.checkIfUserHasPurchasedTicket(activityId);
+            if (hasPurchased) {
+                runInAction(() => {
+                    const activity = this.getActivity(activityId);
+                    if (activity) {
+                        activity.userHasPurchased = true;
+                    }
+                });
+            }
+        } catch (error) {
+            console.error(`Error checking if user purchased ticket for activity ${activityId}:`, error);
+        }
+    }
+    
 
     purchaseTicket = async (activityId: string) => {
         try {

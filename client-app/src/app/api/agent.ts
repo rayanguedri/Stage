@@ -88,7 +88,9 @@ const Activities = {
         requests.post<void>(`/activities/${activityId}/tickets`, {}),
     makePayment: () => axios.post<void>(`/activities/payments`, {}),
     search: (searchTerm: string, params: URLSearchParams) =>
-        axios.get<PaginatedResult<Activity[]>>(`/activities/search?searchTerm=${searchTerm}`, { params }).then(responseBody)
+        axios.get<PaginatedResult<Activity[]>>(`/activities/search?searchTerm=${searchTerm}`, { params }).then(responseBody),
+    checkIfUserHasPurchasedTicket: (activityId: string) =>
+        axios.get<boolean>(`/activities/${activityId}/has-purchased`).then(responseBody)
 }
 
 
