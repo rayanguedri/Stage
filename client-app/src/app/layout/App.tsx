@@ -8,6 +8,7 @@ import { useStore } from '../stores/store';
 import { useEffect } from 'react';
 import LoadingComponent from './LoadingComponent';
 import ModalContainer from '../common/modals/ModalContainer';
+import { MapsProvider } from '../util/MapsContext';
 
 function App() {
   const location = useLocation();
@@ -26,6 +27,7 @@ function App() {
   return (
     
     <>
+    <MapsProvider>
     <ScrollRestoration />
       <ModalContainer />
       <ToastContainer position='bottom-right' hideProgressBar theme='colored' />
@@ -37,7 +39,9 @@ function App() {
           </Container>
         </>
       )}
+      </MapsProvider>
     </>
+    
   );
 }
 

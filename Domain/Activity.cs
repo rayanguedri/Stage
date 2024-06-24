@@ -23,5 +23,7 @@ namespace Domain
         public decimal TicketPrice { get; set; }
         public int TicketQuantitySold { get; set; }
         public int TicketQuantityAvailable { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
     }
 }

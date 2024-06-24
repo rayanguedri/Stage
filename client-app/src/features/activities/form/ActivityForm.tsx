@@ -13,6 +13,8 @@ import MySelectInput from '../../../app/common/form/MySelectInput';
 import MyTextAreaInput from '../../../app/common/form/MyTextArea';
 import MyTextInput from '../../../app/common/form/MyTextInput';
 import { categoryOptions } from '../../../app/common/options/categoryOptions';
+import LocationPicker from '../../../app/util/LocationPicker';
+
 
 export default observer(function ActivityForm() {
     const { activityStore } = useStore();
@@ -22,6 +24,8 @@ export default observer(function ActivityForm() {
 
     const [activityState, setActivityState] = useState<ActivityFormValues>(new ActivityFormValues());
     const [requiresPayment, setRequiresPayment] = useState(false);
+    const [latitude, setLatitude] = useState<number | null>(null);
+    const [longitude, setLongitude] = useState<number | null>(null);
 
     const validationSchema = Yup.object({
         title: Yup.string().required('The event title is required'),
@@ -29,6 +33,9 @@ export default observer(function ActivityForm() {
         description: Yup.string().required(),
         date: Yup.string().required('Date is required').nullable(),
         venue: Yup.string().required(),
+        // Optional validation for latitude and longitude
+        latitude: Yup.number().nullable(),
+        longitude: Yup.number().nullable(),
     });
 
     useEffect(() => {
@@ -37,13 +44,22 @@ export default observer(function ActivityForm() {
                 if (activity) {
                     setActivityState(new ActivityFormValues(activity));
                     setRequiresPayment(activity.requiresPayment);
+                    // Set initial coordinates
+                    setLatitude(activity.latitude);
+                    setLongitude(activity.longitude);
                 }
             });
         }
     }, [id, loadActivity]);
 
     function handleFormSubmit(activity: ActivityFormValues) {
-        const updatedActivity = { ...activity, requiresPayment };
+        const updatedActivity = {
+            ...activity,
+            requiresPayment,
+            latitude: latitude ?? 0,
+            longitude: longitude ?? 0,
+        };
+
         if (!activity.id) {
             const newActivity = {
                 ...updatedActivity,
@@ -55,7 +71,6 @@ export default observer(function ActivityForm() {
         }
     }
 
-    // New function to handle delete
     function handleDeleteActivity() {
         if (id) {
             deleteActivity(id).then(() => navigate('/activities'));
@@ -82,6 +97,14 @@ export default observer(function ActivityForm() {
                         <Header content='Location Details' sub color='teal' />
                         <MyTextInput name='venue' placeholder='Venue' />
                         <MyTextInput name='city' placeholder='City' />
+
+                        {/* Include the LocationPicker */}
+                        <LocationPicker
+                            onLocationSelect={(lat, lng) => {
+                                setLatitude(lat);
+                                setLongitude(lng);
+                            }}
+                        />
 
                         {/* Ticket Details */}
                         <MyTextInput name='ticketPrice' placeholder='Ticket Price' type='number' />

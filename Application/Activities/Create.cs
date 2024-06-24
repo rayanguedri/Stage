@@ -14,7 +14,7 @@ namespace Application.Activities
         {
             public Activity Activity { get; set; }
         }
-
+    
         public class Handler : IRequestHandler<Command, Result<Unit>>
         {
             private readonly DataContext _context;

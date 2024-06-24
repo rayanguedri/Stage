@@ -21,6 +21,8 @@ export interface IActivity {
   ticketQuantityAvailable: number;
   requiresPayment: boolean;
   userHasPurchased: boolean;
+  longitude: number;
+  latitude: number;
 }
 
 export class Activity implements IActivity {
@@ -39,6 +41,8 @@ export class Activity implements IActivity {
     this.ticketQuantityAvailable = init.ticketQuantityAvailable;
     this.requiresPayment = false;
     this.userHasPurchased = false;
+    this.longitude = 0;
+    this.latitude = 0;
   }
 
   id: string;
@@ -61,6 +65,8 @@ export class Activity implements IActivity {
   ticketQuantityAvailable: number = 0;
   requiresPayment: boolean; 
   userHasPurchased: boolean;
+  longitude: number;
+  latitude: number;
 
   get averageRating(): number {
     if (!this.ratings || this.ratings.length === 0) {
@@ -89,6 +95,8 @@ export class ActivityFormValues {
   ticketQuantityAvailable: number = 0;
   requiresPayment: boolean = false;
   userHasPurchased: boolean = false;
+  longitude?: number;
+  latitude?: number;
 
   constructor(activity?: ActivityFormValues) {
     if (activity) {
@@ -105,6 +113,8 @@ export class ActivityFormValues {
       this.ticketQuantityAvailable = activity.ticketQuantityAvailable;
       this.requiresPayment = activity.requiresPayment;
       this.userHasPurchased = activity.userHasPurchased;
+      this.longitude = activity.longitude;
+      this.latitude = activity.latitude;
     }
   }
 }

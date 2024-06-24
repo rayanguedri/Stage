@@ -63,6 +63,15 @@
           }
         }
       },
+      "GoogleMaps.LocationServices/1.2.0.5": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/GoogleMaps.LocationServices.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/GoogleMaps.LocationServices.dll": {}
+        }
+      },
       "Humanizer.Core/2.14.1": {
         "type": "package",
         "compile": {
@@ -1661,6 +1670,18 @@
         "lib/net8.0/EFCore.AutomaticMigrations.dll",
         "lib/net8.0/EFCore.AutomaticMigrations.runtimeconfig.json",
         "readme.md"
+      ]
+    },
+    "GoogleMaps.LocationServices/1.2.0.5": {
+      "sha512": "0j3RL5+acxYgQNz72JdXJ1nUKxMGaY+6UvrOIOxZfp0qpJOUmo/ivCAm53atbnuy0z3vrZK+j9mZifh35UBqag==",
+      "type": "package",
+      "path": "googlemaps.locationservices/1.2.0.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "googlemaps.locationservices.1.2.0.5.nupkg.sha512",
+        "googlemaps.locationservices.nuspec",
+        "lib/netstandard2.0/GoogleMaps.LocationServices.dll"
       ]
     },
     "Humanizer.Core/2.14.1": {
@@ -4302,6 +4323,7 @@
   "projectFileDependencyGroups": {
     "net8.0": [
       "EFCore.AutomaticMigrations >= 8.0.0",
+      "GoogleMaps.LocationServices >= 1.2.0.5",
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 8.0.3",
       "Microsoft.EntityFrameworkCore.Tools >= 8.0.2",
       "Stripe.net >= 44.11.0"
@@ -4314,11 +4336,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\RYANG\\Desktop\\next trial\\New folder\\Stage\\Domain\\Domain.csproj",
+      "projectUniqueName": "c:\\Users\\RYANG\\Desktop\\next trial\\New folder\\Stage\\Domain\\Domain.csproj",
       "projectName": "Domain",
-      "projectPath": "C:\\Users\\RYANG\\Desktop\\next trial\\New folder\\Stage\\Domain\\Domain.csproj",
+      "projectPath": "c:\\Users\\RYANG\\Desktop\\next trial\\New folder\\Stage\\Domain\\Domain.csproj",
       "packagesPath": "C:\\Users\\RYANG\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\RYANG\\Desktop\\next trial\\New folder\\Stage\\Domain\\obj\\",
+      "outputPath": "c:\\Users\\RYANG\\Desktop\\next trial\\New folder\\Stage\\Domain\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -4356,6 +4378,10 @@
           "EFCore.AutomaticMigrations": {
             "target": "Package",
             "version": "[8.0.0, )"
+          },
+          "GoogleMaps.LocationServices": {
+            "target": "Package",
+            "version": "[1.2.0.5, )"
           },
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
             "target": "Package",

@@ -22,7 +22,7 @@ namespace API.Extensions
                 opt.UseNpgsql(config.GetConnectionString("DefaultConnection"));
             });
 
-            // Configure CORS
+
             services.AddCors(opt =>
             {
                 opt.AddPolicy("CorsPolicy", policy =>
@@ -33,6 +33,8 @@ namespace API.Extensions
                           .WithOrigins("http://localhost:3000");
                 });
             });
+
+
 
             services.AddMediatR(cfg =>
             {
@@ -48,6 +50,12 @@ namespace API.Extensions
             services.Configure<CloudinarySettings>(config.GetSection("Cloudinary"));
             services.AddSignalR();
             services.AddScoped<EmailSender>();
+            services.AddHttpClient("GoogleMaps", client =>
+           {
+               client.BaseAddress = new Uri("https://maps.googleapis.com/maps/api/");
+               // Add other configurations or default headers if needed
+           });
+
 
             return services;
         }
