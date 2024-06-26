@@ -8,8 +8,8 @@ const containerStyle = {
 };
 
 const initialCenter = {
-  lat: 37.7749, // Default center (San Francisco)
-  lng: -122.4194,
+  lat: 36.800228,
+  lng: 10.186242,
 };
 
 const LocationPicker = ({ onLocationSelect }: { onLocationSelect: (lat: number, lng: number) => void }) => {
