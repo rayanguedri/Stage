@@ -7,6 +7,8 @@ import { store } from "./store";
 import { Profile } from "../models/profile";
 import { Pagination, PagingParams } from "../models/pagination";
 import { Statistics } from "../models/statistics"; 
+import  LocationStore  from "./locationStore";
+
 
 
 export default class ActivityStore {
@@ -20,31 +22,81 @@ export default class ActivityStore {
     pagingParams = new PagingParams();
     predicate = new Map().set('all', true); // tfiltri bel date
     searchQuery: string = '';
+    locationStore: LocationStore; 
    
 
-    constructor() {
+    constructor(locationStore: LocationStore) {
+        this.locationStore = locationStore;
         makeAutoObservable(this)
+        
         reaction(
-            () => this.predicate.keys(),
+            () => this.locationStore.userLocation,
+            () => {
+                if (this.locationStore.userLocation) {
+                    this.sortActivitiesByProximity();
+                }
+            }
+        );
+
+        reaction(
+            () => Array.from(this.predicate.keys()),
             () => {
                 this.pagingParams = new PagingParams();
                 this.activityRegistry.clear();
                 this.loadActivities();
-                this.loadStatistics(); 
             }
-        )
+        );
     }
+
+
+
+    sortActivitiesByProximity = () => {
+        const { userLocation } = this.locationStore;
+        if (!userLocation) return;
+
+        const { latitude: userLat, longitude: userLng } = userLocation;
+        const activities = Array.from(this.activityRegistry.values());
+
+        activities.sort((a, b) => {
+            const distanceA = this.calculateDistance(userLat, userLng, a.latitude!, a.longitude!);
+            const distanceB = this.calculateDistance(userLat, userLng, b.latitude!, b.longitude!);
+            return distanceA - distanceB;
+        });
+
+        this.activityRegistry = new Map(activities.map((activity) => [activity.id, activity]));
+    };
+
+
+    private calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+        const R = 6371;
+        const dLat = this.deg2rad(lat2 - lat1);
+        const dLon = this.deg2rad(lon2 - lon1);
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const distance = R * c;
+        return distance;
+    };
+
+    private deg2rad = (deg: number) => {
+        return deg * (Math.PI / 180);
+    };
+
+
+
+    
 
     setPagingParams = (pagingParams: PagingParams) => {
         this.pagingParams = pagingParams;
     }
-
     setPredicate = (predicate: string, value: string | Date) => {
         const resetPredicate = () => {
             this.predicate.forEach((_value, key) => {
-                if (key !== 'startDate') this.predicate.delete(key);
-            })
+                if (key !== 'startDate' && key !== 'sortByProximity') this.predicate.delete(key);
+            });
         }
+    
         switch (predicate) {
             case 'all':
                 resetPredicate();
@@ -62,7 +114,12 @@ export default class ActivityStore {
                 this.predicate.delete('startDate');
                 this.predicate.set('startDate', value);
                 break;
+            case 'sortByProximity':
+                resetPredicate();
+                this.predicate.set('sortByProximity', value);
+                break;
         }
+        this.loadActivities();
     }
 
     setSearchQuery = (query: string) => {
@@ -80,8 +137,8 @@ export default class ActivityStore {
         params.append('pageNumber', this.pagingParams.pageNumber.toString());
         params.append('pageSize', this.pagingParams.pageSize.toString());
         this.predicate.forEach((value, key) => {
-            if (key === 'startDate') {
-                params.append(key, (value as Date).toISOString());
+            if (key === 'startDate' || key === 'sortByProximity') {
+                return;
             } else {
                 params.append(key, value);
             }
@@ -116,7 +173,7 @@ export default class ActivityStore {
                 activities[date] = activities[date] ? [...activities[date], activity] : [activity];
                 return activities;
             }, {} as { [key: string]: Activity[] })
-        )
+        );
     }
 
     get activitiesByDate() {
@@ -128,16 +185,24 @@ export default class ActivityStore {
         this.setLoadingInitial(true);
         try {
             const result = await agent.Activities.list(this.axiosParams);
-            result.data.forEach(activity => {
-                this.setActivity(activity);
-            })
-            this.setPagination(result.pagination);
-            this.setLoadingInitial(false);
+            runInAction(() => {
+                result.data.forEach((activity) => {
+                    this.setActivity(activity);
+                });
+                this.setPagination(result.pagination);
+                if (this.predicate.get('sortByProximity') === 'true' && this.locationStore.userLocation) {
+                    this.sortActivitiesByProximity();
+                }
+            });
         } catch (error) {
-            console.log(error);
-            this.setLoadingInitial(false);
+            console.error('Error loading activities', error);
+        } finally {
+            runInAction(() => {
+                this.setLoadingInitial(false);
+            });
         }
-    }
+    };
+    
 
     setPagination = (pagination: Pagination) => {
         this.pagination = pagination;

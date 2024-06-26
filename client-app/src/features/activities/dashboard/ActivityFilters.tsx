@@ -4,13 +4,19 @@ import { Header, Menu } from 'semantic-ui-react';
 import { useStore } from '../../../app/stores/store';
 
 export default observer(function ActivityFilters() {
-    const {activityStore: {predicate, setPredicate}} = useStore();
+    const { activityStore: { predicate, setPredicate } } = useStore();
+
+    const handleProximityFilter = () => {
+        const isActive = predicate.has('sortByProximity');
+        setPredicate('sortByProximity', isActive ? 'false' : 'true');
+    };
+
     return (
         <>
             <Menu vertical size='large' style={{ width: '100%', marginTop: 25 }}>
                 <Header icon='filter' attached color='teal' content='Filters' />
                 <Menu.Item
-                    content='All Activites'
+                    content='All Activities'
                     active={predicate.has('all')}
                     onClick={() => setPredicate('all', 'true')}
                 />
@@ -24,6 +30,11 @@ export default observer(function ActivityFilters() {
                     active={predicate.has('isHost')}
                     onClick={() => setPredicate('isHost', 'true')}
                 />
+                <Menu.Item
+                    content="Sort by Proximity"
+                    active={predicate.get('sortByProximity') === 'true'}
+                    onClick={handleProximityFilter}
+                />
             </Menu>
             <Header />
             <Calendar
@@ -31,5 +42,5 @@ export default observer(function ActivityFilters() {
                 value={predicate.get('startDate') || new Date()}
             />
         </>
-    )
-})
+    );
+});
