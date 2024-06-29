@@ -4,6 +4,7 @@ export interface User {
     token: string;
     image?: string;
     email: string;
+    isBanned?: boolean;
    
 }
 
@@ -13,5 +14,6 @@ export interface UserFormValues {
     password: string;
     displayName?: string;
     username?: string;
+    isBanned?: boolean;
     
 }

@@ -111,9 +111,12 @@ const Account = {
         requests.post<void>(`/account/forgotPassword?email=${email}`, {}),
     resetPassword: (token: string, email: string, newPassword: string) =>
         requests.post<void>(`/account/resetPassword?token=${token}&email=${email}&newPassword=${newPassword}`, {}),
-    listUsers: () => requests.get<User[]>('/account/listUsers')
-
+    listUsers: () => requests.get<User[]>('/account/listUsers'),
+    banUser: (user: User) => requests.post<void>('/account/banUser', user),
+    unbanUser: (user: User) => requests.post<void>('/account/unbanUser', user),
 }
+
+
 
 const StatisticsAPI = {
     getStatistics: () => requests.get<Statistics>('/statistics')

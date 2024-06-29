@@ -20,19 +20,15 @@ namespace API.Controllers
         private readonly TokenService _tokenService;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly EmailSender _emailSender;
+
         public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, TokenService tokenService, EmailSender emailSender)
         {
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _tokenService = tokenService;
             _emailSender = emailSender;
-            _signInManager = signInManager;
-            _tokenService = tokenService;
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _tokenService = tokenService;
-            _userManager = userManager;
         }
 
-
-  [Authorize]
         [HttpGet("listUsers")]
         public async Task<ActionResult<List<UserDto>>> ListUsers()
         {
@@ -44,18 +40,18 @@ namespace API.Controllers
                     Username = user.UserName,
                     Email = user.Email,
                     Bio = user.Bio,
-                    Image = user.Photos.FirstOrDefault(x => x.IsMain) != null 
-                            ? user.Photos.FirstOrDefault(x => x.IsMain).Url 
+                    Image = user.Photos.FirstOrDefault(x => x.IsMain) != null
+                            ? user.Photos.FirstOrDefault(x => x.IsMain).Url
                             : null,
                     ActivitiesCount = user.Activities.Count,
                     FollowersCount = user.Followers.Count,
-                    FollowingsCount = user.Followings.Count
+                    FollowingsCount = user.Followings.Count,
+                     IsBanned = user.IsBanned 
                 })
                 .ToListAsync();
 
             return Ok(users);
         }
-
 
         [AllowAnonymous]
         [HttpPost("login")]
@@ -71,7 +67,10 @@ namespace API.Controllers
             if (user.UserName == "jane") user.EmailConfirmed = true; // test kahaw na7eha mba3d
 
 
+            if (user.IsBanned) return Unauthorized("This account has been banned");
+
             if (!user.EmailConfirmed) return Unauthorized("Email not confirmed");
+
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
@@ -121,7 +120,6 @@ namespace API.Controllers
             return Ok("Registration successful - please verify email");
         }
 
-
         [AllowAnonymous]
         [HttpPost("verifyEmail")]
         public async Task<ActionResult> VerifyEmail(string token, string email)
@@ -134,7 +132,7 @@ namespace API.Controllers
             var decodedToken = Encoding.UTF8.GetString(decodedTokenBytes);
             var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
 
-            if (!result.Succeeded) return BadRequest("Could not verify email addresss");
+            if (!result.Succeeded) return BadRequest("Could not verify email address");
 
             return Ok("Email confirmed - you can now login");
         }
@@ -158,7 +156,6 @@ namespace API.Controllers
 
             return Ok("email verification link resent");
         }
-
 
         [Authorize]
         [HttpGet]
@@ -202,9 +199,7 @@ namespace API.Controllers
             var message = $"<p>Please click the below link to reset your password:</p><p><a href='{resetUrl}'>Click to reset password</a></p>";
             await _emailSender.SendEmailAsync(email, "Reset Password", message);
 
-            return Ok("Passwrod reset link sent");
-
-            
+            return Ok("Password reset link sent");
         }
 
         [AllowAnonymous]
@@ -232,9 +227,41 @@ namespace API.Controllers
                 return BadRequest("Failed to reset password.");
             }
 
-             return Redirect("/login");
+            return Redirect("/login");
+        }
+        [HttpPost("banUser")]
+        public async Task<IActionResult> BanUser(UserDto userDto)
+        {
+            var user = await _userManager.FindByNameAsync(userDto.Username);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            user.IsBanned = true;  // Set the user as banned
+            await _userManager.UpdateAsync(user);
+
+            // You may want to log out the user if they are currently logged in
+            await _signInManager.SignOutAsync();
+
+            return Ok("User banned successfully");
+        }
+
+        [HttpPost("unbanUser")]
+        public async Task<IActionResult> UnbanUser(UserDto userDto)
+        {
+            var user = await _userManager.FindByNameAsync(userDto.Username);
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+
+            user.IsBanned = false;  // Unban the user
+            await _userManager.UpdateAsync(user);
+
+            return Ok("User unbanned successfully");
         }
     }
+
+
 }
-
-

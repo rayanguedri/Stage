@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Container, CssBaseline, Grid } from '@mui/material';
 import { Outlet, useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -9,6 +9,7 @@ import ModalContainer from '../common/modals/ModalContainer';
 
 import NavBar from './NavBar';
 import { MapsProvider } from '../util/MapsContext';
+import HomePage from '../../features/home/HomePage';
 
 function App() {
   const location = useLocation();
@@ -39,7 +40,7 @@ function App() {
         <Grid item lg={9} md={8} sm={7} xs={12}>
           <NavBar />
           <Container sx={{ marginTop: '7em', marginBottom: '2em' }}>
-            <Outlet />
+            {location.pathname === '/' ? <HomePage /> : <Outlet />}
           </Container>
         </Grid>
       </Grid>

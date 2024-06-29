@@ -10,6 +10,7 @@ namespace API.DTOs
         public int FollowersCount { get; set; }
         public int FollowingsCount { get; set; }
         public string Email { get; set; }
+        public bool IsBanned { get; set; }
         public string Bio { get; set; }
     }
 }

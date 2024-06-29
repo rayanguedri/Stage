@@ -8,8 +8,9 @@ export default class UserStore {
     user: User | null = null;
     users: User[] = [];
     userRegistry = new Map<string, User>();
+
     constructor() {
-        makeAutoObservable(this)
+        makeAutoObservable(this);
     }
 
     get isLoggedIn() {
@@ -24,20 +25,17 @@ export default class UserStore {
         store.modalStore.closeModal();
     }
 
-
     logout = () => {
         store.commonStore.setToken(null);
         this.user = null;
         router.navigate('/');
     }
 
-   
-   
-   register = async (creds: UserFormValues) => {
-    try {
-        await agent.Account.register(creds);
-        router.navigate(`/account/registerSuccess?email=${creds.email}`);
-        store.modalStore.closeModal();
+    register = async (creds: UserFormValues) => {
+        try {
+            await agent.Account.register(creds);
+            router.navigate(`/account/registerSuccess?email=${creds.email}`);
+            store.modalStore.closeModal();
         } catch (error) {
             console.log(error);
             throw error;
@@ -45,21 +43,18 @@ export default class UserStore {
     }
 
     setImage = (image: string) => {
-        if (this.user){
+        if (this.user) {
             this.user.image = image;
         }
-        
     }
 
     setDisplayName = (name: string) => {
         if (this.user) this.user.displayName = name;
     }
-    
 
     setUserPhoto = (url: string) => {
         if (this.user) this.user.image = url;
     }
-   
 
     getUser = async () => {
         try {
@@ -68,9 +63,9 @@ export default class UserStore {
         } catch (error) {
             console.log(error);
         }
-     }
+    }
 
-     forgotPassword = async (email: string) => {
+    forgotPassword = async (email: string) => {
         try {
             await agent.Account.forgotPassword(email);
             router.navigate('/forgot-password-success');
@@ -90,20 +85,47 @@ export default class UserStore {
         }
     }
 
-     // Add this method
-     loadUsers = async () => {
+    loadUsers = async () => {
         try {
             const users = await agent.Account.listUsers();
             runInAction(() => {
                 this.users = users;
-                // Populate userRegistry
                 this.userRegistry.clear();
                 users.forEach(user => this.userRegistry.set(user.username, user));
+                console.log("Loaded users:", this.users);
             });
         } catch (error) {
             console.log(error);
         }
     }
 
-    
+    banUser = async (user: User) => {
+        try {
+            await agent.Account.banUser(user);
+            runInAction(() => {
+                user.isBanned = true; // Update local user object
+                this.userRegistry.set(user.username, user); // Update user registry
+            });
+            await this.loadUsers(); // Refresh user list from the backend
+            console.log("Banned user:", user);
+        } catch (error) {
+            console.error('Error banning user:', error);
+            throw error;
+        }
+    }
+
+    unbanUser = async (user: User) => {
+        try {
+            await agent.Account.unbanUser(user);
+            runInAction(() => {
+                user.isBanned = false; // Update local user object
+                this.userRegistry.set(user.username, user); // Update user registry
+            });
+            await this.loadUsers(); // Refresh user list from the backend
+            console.log("Unbanned user:", user);
+        } catch (error) {
+            console.error('Error unbanning user:', error);
+            throw error;
+        }
+    }
 }

@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Table, Tag, Tooltip, Popconfirm, message } from 'antd';
+import { Table, Tag, Tooltip, Popconfirm, message, Spin, Button } from 'antd';
 import { useStore } from '../stores/store';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
@@ -9,6 +9,8 @@ import { Activity } from '../models/activity';
 
 const ActivitiesAdmin = observer(() => {
   const { activityStore, userStore } = useStore();
+  const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const loadActivitiesAndUsers = async () => {
@@ -22,13 +24,40 @@ const ActivitiesAdmin = observer(() => {
     try {
       await activityStore.deleteActivityAdmin(id);
       message.success('Activity deleted successfully');
+      // Reload activities after deletion
+      await activityStore.loadActivities();
     } catch (error) {
       message.error('Failed to delete activity');
     }
   };
 
+  const handleBatchDelete = async () => {
+    try {
+      setLoading(true);
+      // Perform batch deletion for selected activities
+      await Promise.all(selectedRowKeys.map(async (id) => {
+        await activityStore.deleteActivityAdmin(id);
+      }));
+      message.success('Selected activities deleted successfully');
+      // Clear selection and reload activities after deletion
+      setSelectedRowKeys([]);
+      await activityStore.loadActivities();
+    } catch (error) {
+      message.error('Failed to delete selected activities');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const columns = [
-    { title: 'Title', dataIndex: 'title', key: 'title' },
+    {
+      title: 'Title',
+      dataIndex: 'title',
+      key: 'title',
+      render: (text: string, record: Activity) => (
+        <Link to={`/activities/${record.id}`}>{text}</Link>
+      ),
+    },
     {
       title: 'Date',
       dataIndex: 'date',
@@ -76,31 +105,55 @@ const ActivitiesAdmin = observer(() => {
     {
       title: 'Actions',
       key: 'actions',
-      render: (activity: Activity) => (
+      render: (record: Activity) => (
         <span>
-          <Link to={`/activities/${activity.id}`}>View Activity</Link>
           <Popconfirm
             title="Are you sure you want to delete this activity?"
-            onConfirm={() => handleDelete(activity.id)}
+            onConfirm={() => handleDelete(record.id)}
             okText="Yes"
             cancelText="No"
           >
-            <a style={{ marginLeft: 16, color: 'red' }}>Delete</a>
+            <a style={{ color: 'red' }}>Delete</a>
           </Popconfirm>
         </span>
       ),
     },
   ];
 
+  const onSelectChange = (selectedKeys: React.Key[]) => {
+    setSelectedRowKeys(selectedKeys as string[]);
+  };
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+
   return (
     <div>
       <h1>Activities Admin</h1>
-      <Table
-        dataSource={activityStore.activities.slice()} // Use all activities from store
-        columns={columns}
-        loading={activityStore.loadingInitial}
-        rowKey={(activity) => activity.id}
-      />
+      <Spin spinning={activityStore.loadingInitial}>
+        <div style={{ marginBottom: 16 }}>
+          <Button
+            type="primary"
+            onClick={handleBatchDelete}
+            loading={loading}
+            disabled={selectedRowKeys.length === 0}
+          >
+            Delete Selected
+          </Button>
+        </div>
+        <Table
+          dataSource={activityStore.activities} // Use all activities from store
+          columns={columns}
+          rowKey={(record) => record.id}
+          pagination={false} // Disable built-in pagination
+          rowSelection={{ ...rowSelection, type: 'checkbox' }} // Enable row selection with checkboxes
+          scroll={{ y: 400 }} // Example scroll height
+          loading={loading}
+          onChange={() => {}} // Empty onChange to prevent console warnings
+        />
+      </Spin>
     </div>
   );
 });
