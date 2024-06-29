@@ -32,6 +32,29 @@ namespace API.Controllers
         }
 
 
+  [Authorize]
+        [HttpGet("listUsers")]
+        public async Task<ActionResult<List<UserDto>>> ListUsers()
+        {
+            var users = await _userManager.Users
+                .Include(p => p.Photos)
+                .Select(user => new UserDto
+                {
+                    DisplayName = user.DisplayName,
+                    Username = user.UserName,
+                    Email = user.Email,
+                    Bio = user.Bio,
+                    Image = user.Photos.FirstOrDefault(x => x.IsMain) != null 
+                            ? user.Photos.FirstOrDefault(x => x.IsMain).Url 
+                            : null,
+                    ActivitiesCount = user.Activities.Count,
+                    FollowersCount = user.Followers.Count,
+                    FollowingsCount = user.Followings.Count
+                })
+                .ToListAsync();
+
+            return Ok(users);
+        }
 
 
         [AllowAnonymous]
