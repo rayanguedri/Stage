@@ -21,6 +21,7 @@
     "@stripe/stripe-js": "^3.5.0",
     "@types/react-cropper": "^1.3.7",
     "@types/styled-components": "^5.1.34",
+    "antd": "^5.18.3",
     "axios": "^1.6.8",
     "chart.js": "^4.4.3",
     "date-fns": "^3.6.0",

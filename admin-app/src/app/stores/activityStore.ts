@@ -181,6 +181,10 @@ export default class ActivityStore {
             a.date!.getTime() - b.date!.getTime());
     }
 
+    get activities() {
+        return Array.from(this.activityRegistry.values());
+    }
+
     loadActivities = async () => {
         this.setLoadingInitial(true);
         try {
@@ -241,6 +245,7 @@ export default class ActivityStore {
         activity.date = new Date(activity.date!);
         this.activityRegistry.set(activity.id, activity);
     }
+    
 
     private getActivity = (id: string) => {
         return this.activityRegistry.get(id);

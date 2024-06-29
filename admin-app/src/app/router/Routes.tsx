@@ -1,5 +1,4 @@
 import { createBrowserRouter, Navigate, RouteObject } from "react-router-dom";
-import ActivityDashboard from "../../features/activities/dashboard/ActivityDashboard";
 import ActivityDetails from "../../features/activities/details/ActivityDetails";
 import ActivityForm from "../../features/activities/form/ActivityForm";
 import NotFound from "../../features/errors/NotFound";
@@ -17,6 +16,7 @@ import ResetPasswordForm from "../../features/users/ResetPasswordForm";
 import EmailSentPage from "../../features/redirect/EmailSentPage";
 import StatisticsPage from "../common/modals/StatisticsPage";
 import Users from "../layout/Users";
+import ActivitiesAdmin from "../layout/ActivitiesAdmin";
 
 export const routes: RouteObject[] = [
     {
@@ -26,7 +26,7 @@ export const routes: RouteObject[] = [
             {
                 element: <RequireAuth />,
                 children: [
-                    { path: 'activities', element: <ActivityDashboard /> },
+                    { path: 'activities', element: <ActivitiesAdmin /> },
                     { path: 'activities/:id', element: <ActivityDetails /> },
                     { path: 'createActivity', element: <ActivityForm key='create' /> },
                     { path: 'manage/:id', element: <ActivityForm key='manage' /> },

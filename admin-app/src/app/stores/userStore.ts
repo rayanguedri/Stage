@@ -7,7 +7,7 @@ import { store } from "./store";
 export default class UserStore {
     user: User | null = null;
     users: User[] = [];
-
+    userRegistry = new Map<string, User>();
     constructor() {
         makeAutoObservable(this)
     }
@@ -94,7 +94,12 @@ export default class UserStore {
      loadUsers = async () => {
         try {
             const users = await agent.Account.listUsers();
-            runInAction(() => this.users = users);
+            runInAction(() => {
+                this.users = users;
+                // Populate userRegistry
+                this.userRegistry.clear();
+                users.forEach(user => this.userRegistry.set(user.username, user));
+            });
         } catch (error) {
             console.log(error);
         }
