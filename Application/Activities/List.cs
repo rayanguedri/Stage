@@ -12,7 +12,7 @@ namespace Application.Activities
         public class Query : IRequest<Result<PagedList<ActivityDto>>>
         {
             public ActivityParams Params { get; set; }
-            public string SearchTerm { get; set; } // New property for search
+            public string SearchTerm { get; set; }
         }
 
         public class Handler : IRequestHandler<Query, Result<PagedList<ActivityDto>>>

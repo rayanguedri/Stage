@@ -12,6 +12,8 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "@iconify/react": "^5.0.1",
     "@microsoft/signalr": "^8.0.0",
     "@mui/icons-material": "^5.15.20",
@@ -23,12 +25,15 @@
     "@types/styled-components": "^5.1.34",
     "antd": "^5.18.3",
     "axios": "^1.6.8",
+    "bootstrap": "^5.3.3",
     "chart.js": "^4.4.3",
     "date-fns": "^3.6.0",
     "formik": "^2.4.5",
     "mobx": "^6.12.3",
     "mobx-react-lite": "^4.0.7",
     "react": "^18.2.0",
+    "react-avatar": "^5.0.3",
+    "react-bootstrap": "^2.10.3",
     "react-calendar": "^4.8.0",
     "react-chartjs-2": "^5.2.0",
     "react-cropper": "^2.3.3",
@@ -47,6 +52,7 @@
     "yup": "^1.4.0"
   },
   "devDependencies": {
+    "@types/bootstrap": "^5.2.10",
     "@types/react": "^18.2.64",
     "@types/react-datepicker": "^6.2.0",
     "@types/react-dom": "^18.2.21",

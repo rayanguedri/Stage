@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../stores/store';
 import { Link } from 'react-router-dom';
-import { Table, Container, Button } from 'semantic-ui-react';
+import { Table, Container, Button, Input } from 'semantic-ui-react';
 import { User } from '../models/user';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -14,6 +14,7 @@ function isErrorWithMessage(error: unknown): error is { message: string } {
 
 const Users = () => {
   const { userStore } = useStore();
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   useEffect(() => {
     const loadUsersAndLogStatus = async () => {
@@ -58,9 +59,22 @@ const Users = () => {
     }
   };
 
+  // Filter users based on search query
+  const filteredUsers = userStore.users.filter(user =>
+    user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.displayName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <Container>
       <h1>Users</h1>
+      <Input
+        icon='search'
+        placeholder='Search users...'
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        style={{ marginBottom: '20px' }}
+      />
       <Table celled>
         <Table.Header>
           <Table.Row>
@@ -73,7 +87,7 @@ const Users = () => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {userStore.users.map((user) => (
+          {filteredUsers.map((user) => (
             <Table.Row key={user.username}>
               <Table.Cell>
                 <img 

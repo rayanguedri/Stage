@@ -1,4 +1,3 @@
-// Sidebar.tsx
 import { useState } from 'react';
 import {
   Box,
@@ -12,6 +11,9 @@ import {
   Avatar,
   Stack,
   Button,
+  Menu,
+  MenuItem,
+  IconButton,
 } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { useStore } from '../stores/store';
@@ -19,16 +21,25 @@ import { observer } from 'mobx-react-lite';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ErrorIcon from '@mui/icons-material/Error';
 import BarChartIcon from '@mui/icons-material/BarChart';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AddIcon from '@mui/icons-material/Add';
-import PeopleIcon from '@mui/icons-material/People'; // Import People icon for Users tab
+import PeopleIcon from '@mui/icons-material/People';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'; // Arrow down icon
 
 const Sidebar = () => {
   const { userStore: { user, logout, isLoggedIn } } = useStore();
   const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
   };
 
   return (
@@ -115,19 +126,34 @@ const Sidebar = () => {
         <Divider />
         <Box sx={{ p: 2 }}>
           {isLoggedIn ? (
-            <Stack direction="row" alignItems="center" spacing={2}>
-              <Avatar alt="User Avatar" src={user?.image || '/assets/user.png'} />
-              <Typography variant="subtitle1" sx={{ flexGrow: 1 }}>
+            <Stack direction="column" alignItems="center" spacing={1}>
+              <IconButton onClick={handleMenuOpen} size="small">
+                <Avatar alt="User Avatar" src={user?.image || '/assets/user.png'} />
+              </IconButton>
+              <Typography variant="body2">
                 {user?.displayName}
+                <IconButton onClick={handleMenuOpen} size="small">
+                  <ArrowDropDownIcon />
+                </IconButton>
               </Typography>
-              <Button
-                variant="contained"
-                color="secondary"
-                startIcon={<ExitToAppIcon />}
-                onClick={logout}
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
               >
-                Logout
-              </Button>
+                <MenuItem component={NavLink} to={`/profiles/${user?.username}`} onClick={handleMenuClose}>
+                  My Profile
+                </MenuItem>
+                <MenuItem onClick={logout}>Logout</MenuItem>
+              </Menu>
             </Stack>
           ) : (
             <Button

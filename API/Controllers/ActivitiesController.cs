@@ -26,12 +26,12 @@ namespace API.Controllers
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                // If searchTerm is provided, filter activities by title
+                
                 result = await Mediator.Send(new List.Query { Params = param, SearchTerm = searchTerm });
             }
             else
             {
-                // Otherwise, return all activities
+                
                 result = await Mediator.Send(new List.Query { Params = param });
             }
 
@@ -44,16 +44,16 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new Details.Query { Id = id }));
         }
 
-        [HttpPost("{id}/tickets")] // Endpoint for purchasing tickets
+        [HttpPost("{id}/tickets")] 
         public async Task<IActionResult> PurchaseTickets(Guid id, PurchaseTicket.Command command)
         {
-            // Get the ID of the current user
+            
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Pass the user ID to the command
+            
             command.UserId = userId;
 
-            // Set the activity ID
+            
             command.ActivityId = id;
 
             return HandleResult(await Mediator.Send(command));
@@ -91,7 +91,7 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new Edit.Command { Activity = activity }));
         }
 
-        [HttpDelete("delete/{id}")] // Example of a different route
+        [HttpDelete("delete/{id}")] 
         public async Task<IActionResult> DeleteWithoutAuth(Guid id)
         {
             return HandleResult(await Mediator.Send(new Delete.Command { Id = id }));
@@ -111,16 +111,16 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new UpdateAttendance.Command { Id = id }));
         }
 
-        [HttpPost("{id}/rate")] // New endpoint for rating an activity
+        [HttpPost("{id}/rate")] 
         public async Task<IActionResult> RateActivity(Guid id, Rate.Command command)
         {
-            // Get the ID of the current user
+           
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Pass the user ID to the command
+            
             command.UserId = userId;
 
-            // Set the activity ID
+            
             command.ActivityId = id;
 
             return HandleResult(await Mediator.Send(command));
@@ -160,7 +160,7 @@ namespace API.Controllers
                 Mode = "payment",
 
 
-                // this 2 pages will be implmented in front side (React)
+                
                 SuccessUrl = "http://localhost:3000/success",
                 CancelUrl = "http://localhost:3000/cancel",
             };
