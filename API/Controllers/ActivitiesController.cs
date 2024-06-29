@@ -91,6 +91,13 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new Edit.Command { Activity = activity }));
         }
 
+        [HttpDelete("delete/{id}")] // Example of a different route
+        public async Task<IActionResult> DeleteWithoutAuth(Guid id)
+        {
+            return HandleResult(await Mediator.Send(new Delete.Command { Id = id }));
+        }
+
+
         [Authorize(Policy = "IsActivityHost")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)

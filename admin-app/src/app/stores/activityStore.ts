@@ -1,15 +1,13 @@
 import { makeAutoObservable, reaction, runInAction } from "mobx";
-import { Activity, ActivityFormValues } from "../models/activity";
 import agent from "../api/agent";
-import { format } from 'date-fns';
-import { v4 as uuid } from 'uuid';
+import { Activity, ActivityFormValues } from "../models/activity";
 import { store } from "./store";
 import { Profile } from "../models/profile";
 import { Pagination, PagingParams } from "../models/pagination";
-import { Statistics } from "../models/statistics"; 
-import  LocationStore  from "./locationStore";
-
-
+import { Statistics } from "../models/statistics";
+import LocationStore from "./locationStore";
+import { format } from 'date-fns';
+import { v4 as uuid } from 'uuid';
 
 export default class ActivityStore {
     activityRegistry = new Map<string, Activity>();
@@ -20,15 +18,14 @@ export default class ActivityStore {
     statistics: Statistics | null = null;
     pagination: Pagination | null = null;
     pagingParams = new PagingParams();
-    predicate = new Map().set('all', true); // tfiltri bel date
+    predicate = new Map().set('all', true);
     searchQuery: string = '';
-    locationStore: LocationStore; 
-   
+    locationStore: LocationStore;
 
     constructor(locationStore: LocationStore) {
         this.locationStore = locationStore;
-        makeAutoObservable(this)
-        
+        makeAutoObservable(this);
+
         reaction(
             () => this.locationStore.userLocation,
             () => {
@@ -48,8 +45,6 @@ export default class ActivityStore {
         );
     }
 
-
-
     sortActivitiesByProximity = () => {
         const { userLocation } = this.locationStore;
         if (!userLocation) return;
@@ -65,7 +60,6 @@ export default class ActivityStore {
 
         this.activityRegistry = new Map(activities.map((activity) => [activity.id, activity]));
     };
-
 
     private calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
         const R = 6371;
@@ -83,20 +77,17 @@ export default class ActivityStore {
         return deg * (Math.PI / 180);
     };
 
-
-
-    
-
     setPagingParams = (pagingParams: PagingParams) => {
         this.pagingParams = pagingParams;
-    }
+    };
+
     setPredicate = (predicate: string, value: string | Date) => {
         const resetPredicate = () => {
             this.predicate.forEach((_value, key) => {
                 if (key !== 'startDate' && key !== 'sortByProximity') this.predicate.delete(key);
             });
-        }
-    
+        };
+
         switch (predicate) {
             case 'all':
                 resetPredicate();
@@ -120,18 +111,19 @@ export default class ActivityStore {
                 break;
         }
         this.loadActivities();
-    }
+    };
 
     setSearchQuery = (query: string) => {
         this.searchQuery = query;
         this.pagingParams = new PagingParams();
         this.activityRegistry.clear();
         this.loadActivities();
-    }
+    };
 
     clearSearchQuery = () => {
         this.searchQuery = '';
-    }
+    };
+
     get axiosParams() {
         const params = new URLSearchParams();
         params.append('pageNumber', this.pagingParams.pageNumber.toString());
@@ -165,7 +157,8 @@ export default class ActivityStore {
             console.log('Error searching activities:', error);
             this.setLoadingInitial(false);
         }
-    }
+    };
+
     get groupedActivities() {
         return Object.entries(
             this.activitiesByDate.reduce((activities, activity) => {
@@ -206,11 +199,10 @@ export default class ActivityStore {
             });
         }
     };
-    
 
     setPagination = (pagination: Pagination) => {
         this.pagination = pagination;
-    }
+    };
 
     loadActivity = async (id: string) => {
         let activity = this.getActivity(id);
@@ -231,7 +223,7 @@ export default class ActivityStore {
                 this.setLoadingInitial(false);
             }
         }
-    }
+    };
 
     private setActivity = (activity: Activity) => {
         const user = store.userStore.user;
@@ -244,16 +236,15 @@ export default class ActivityStore {
         }
         activity.date = new Date(activity.date!);
         this.activityRegistry.set(activity.id, activity);
-    }
-    
+    };
 
     private getActivity = (id: string) => {
         return this.activityRegistry.get(id);
-    }
+    };
 
     setLoadingInitial = (state: boolean) => {
         this.loadingInitial = state;
-    }
+    };
 
     createActivity = async (activity: ActivityFormValues) => {
         const user = store.userStore.user;
@@ -268,30 +259,27 @@ export default class ActivityStore {
             this.setActivity(newActivity);
             runInAction(() => {
                 this.selectedActivity = newActivity;
-
-            })
+            });
         } catch (error) {
             console.log(error);
             runInAction(() => this.loading = false);
         }
-    }
+    };
 
     updateActivity = async (activity: ActivityFormValues) => {
-
         try {
-            await agent.Activities.update(activity)
+            await agent.Activities.update(activity);
             runInAction(() => {
                 if (activity.id) {
                     const updatedActivity = { ...this.getActivity(activity.id), ...activity };
                     this.activityRegistry.set(activity.id, updatedActivity as Activity);
                     this.selectedActivity = updatedActivity as Activity;
                 }
-            })
+            });
         } catch (error) {
             console.log(error);
-
         }
-    }
+    };
 
     deleteActivity = async (id: string) => {
         this.loading = true;
@@ -300,16 +288,32 @@ export default class ActivityStore {
             runInAction(() => {
                 this.activityRegistry.delete(id);
                 this.loading = false;
-            })
+            });
         } catch (error) {
             console.log(error);
             runInAction(() => {
                 this.loading = false;
-            })
+            });
         }
-    }
+    };
 
-    updateAttendeance = async () => {
+    deleteActivityAdmin = async (id: string) => {
+        this.loading = true;
+        try {
+            await agent.Activities.deleteWithoutAuth(id);
+            runInAction(() => {
+                this.activityRegistry.delete(id);
+                this.loading = false;
+            });
+        } catch (error) {
+            console.log(error);
+            runInAction(() => {
+                this.loading = false;
+            });
+        }
+    };
+
+    updateAttendance = async () => {
         const user = store.userStore.user;
         this.loading = true;
         try {
@@ -324,13 +328,13 @@ export default class ActivityStore {
                     this.selectedActivity!.isGoing = true;
                 }
                 this.activityRegistry.set(this.selectedActivity!.id, this.selectedActivity!);
-            })
+            });
         } catch (error) {
             console.log(error);
         } finally {
             runInAction(() => this.loading = false);
         }
-    }
+    };
 
     cancelActivityToggle = async () => {
         this.loading = true;
@@ -339,18 +343,17 @@ export default class ActivityStore {
             runInAction(() => {
                 this.selectedActivity!.isCancelled = !this.selectedActivity!.isCancelled;
                 this.activityRegistry.set(this.selectedActivity!.id, this.selectedActivity!);
-            })
+            });
         } catch (error) {
             console.log(error);
         } finally {
             runInAction(() => this.loading = false);
         }
-    }
-    
+    };
 
     clearSelectedActivity = () => {
         this.selectedActivity = undefined;
-    }
+    };
 
     updateAttendeeFollowing = (username: string) => {
         this.activityRegistry.forEach(activity => {
@@ -359,9 +362,9 @@ export default class ActivityStore {
                     attendee.following ? attendee.followersCount-- : attendee.followersCount++;
                     attendee.following = !attendee.following;
                 }
-            })
-        })
-    }
+            });
+        });
+    };
 
     rateActivity = async (activityId: string, ratingValue: number) => {
         try {
@@ -375,11 +378,9 @@ export default class ActivityStore {
             runInAction(() => {
                 const activity = this.getActivity(activityId);
                 if (activity) {
-                    // Ensure the ratings array exists and initialize if necessary
                     if (!activity.ratings) {
                         activity.ratings = [];
                     }
-                    // Push the new rating to the ratings array
                     activity.ratings.push({ id: uuid(), userId: user.username, activityId, value: ratingValue });
                 } else {
                     console.error(`Activity with ID ${activityId} not found.`);
@@ -388,7 +389,7 @@ export default class ActivityStore {
         } catch (error) {
             console.log('Error rating activity: ', error);
         }
-    }
+    };
 
     checkIfUserPurchasedTicket = async (activityId: string) => {
         try {
@@ -409,8 +410,7 @@ export default class ActivityStore {
         } catch (error) {
             console.error(`Error checking if user purchased ticket for activity ${activityId}:`, error);
         }
-    }
-    
+    };
 
     purchaseTicket = async (activityId: string) => {
         try {
@@ -418,32 +418,25 @@ export default class ActivityStore {
             runInAction(() => {
                 const activity = this.getActivity(activityId);
                 if (activity) {
-                    activity.ticketQuantitySold += 1; // Assuming ticket quantity sold increases by 1 on each purchase
-                    activity.ticketQuantityAvailable -= 1; // Assuming ticket quantity available decreases by 1 on each purchase
+                    activity.ticketQuantitySold += 1;
+                    activity.ticketQuantityAvailable -= 1;
                 }
             });
         } catch (error) {
             console.error('Error purchasing ticket:', error);
         }
-    }
+    };
 
-    handlepayment = async() => {
-
-       try {
-        await agent.Activities.makePayment()
-        runInAction(() => {
-            console.log("payment is good ")
-            
-           /*  const activity = this.getActivity();
-            if (activity) {
-                activity.ticketQuantitySold += 1; // Assuming ticket quantity sold increases by 1 on each purchase
-                activity.ticketQuantityAvailable -= 1; // Assuming ticket quantity available decreases by 1 on each purchase
-            } */
-        });
+    handlePayment = async () => {
+        try {
+            await agent.Activities.makePayment();
+            runInAction(() => {
+                console.log("Payment is successful.");
+            });
         } catch (error) {
             console.error('Error initiating payment:', error);
         }
-    }
+    };
 
     loadStatistics = async () => {
         try {

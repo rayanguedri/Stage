@@ -1,3 +1,4 @@
+
 export interface Pagination {
     currentPage: number;
     itemsPerPage: number;
@@ -19,7 +20,7 @@ export class PagingParams {
     pageNumber;
     pageSize;
 
-    constructor(pageNumber = 1, pageSize = 2) {
+    constructor(pageNumber = 1, pageSize = 90) {
         this.pageNumber = pageNumber;
         this.pageSize = pageSize;
     }

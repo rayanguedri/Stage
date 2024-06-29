@@ -1,30 +1,39 @@
 import { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Table, Tag, Tooltip } from 'antd';
+import { Table, Tag, Tooltip, Popconfirm, message } from 'antd';
 import { useStore } from '../stores/store';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
 import { Profile } from '../models/profile';
-import { Activity } from '../models/activity'; // Import Activity model if not already imported
+import { Activity } from '../models/activity';
 
 const ActivitiesAdmin = observer(() => {
   const { activityStore, userStore } = useStore();
 
   useEffect(() => {
     const loadActivitiesAndUsers = async () => {
-      await activityStore.loadActivities();
-      await userStore.loadUsers(); 
+      await activityStore.loadActivities(); // Load all activities
+      await userStore.loadUsers();
     };
     loadActivitiesAndUsers();
   }, [activityStore, userStore]);
 
+  const handleDelete = async (id: string) => {
+    try {
+      await activityStore.deleteActivityAdmin(id);
+      message.success('Activity deleted successfully');
+    } catch (error) {
+      message.error('Failed to delete activity');
+    }
+  };
+
   const columns = [
     { title: 'Title', dataIndex: 'title', key: 'title' },
-    { 
-      title: 'Date', 
-      dataIndex: 'date', 
-      key: 'date', 
-      render: (date: string) => date ? format(new Date(date), 'dd MMM yyyy') : 'N/A' 
+    {
+      title: 'Date',
+      dataIndex: 'date',
+      key: 'date',
+      render: (date: string) => (date ? format(new Date(date), 'dd MMM yyyy') : 'N/A'),
     },
     { title: 'Category', dataIndex: 'category', key: 'category' },
     { title: 'Description', dataIndex: 'description', key: 'description' },
@@ -36,7 +45,7 @@ const ActivitiesAdmin = observer(() => {
       key: 'attendees',
       render: (attendees: Profile[]) => (
         <span>
-          {attendees?.map(attendee => (
+          {attendees?.map((attendee) => (
             <Tag key={attendee.username}>{attendee.displayName}</Tag>
           ))}
         </span>
@@ -47,7 +56,7 @@ const ActivitiesAdmin = observer(() => {
       dataIndex: 'hostUsername',
       key: 'host',
       render: (hostUsername: string) => {
-        const host = userStore.userRegistry.get(hostUsername); // Get host data from userRegistry
+        const host = userStore.userRegistry.get(hostUsername);
         return host ? (
           <Tooltip title={host.displayName}>
             <Link to={`/profiles/${host.username}`}>
@@ -59,26 +68,38 @@ const ActivitiesAdmin = observer(() => {
               <span style={{ marginLeft: 8 }}>{host.displayName}</span>
             </Link>
           </Tooltip>
-        ) : 'Unknown';
-      }
+        ) : (
+          'Unknown'
+        );
+      },
     },
     {
       title: 'Actions',
       key: 'actions',
       render: (activity: Activity) => (
-        <Link to={`/activities/${activity.id}`}>View Activity</Link>
+        <span>
+          <Link to={`/activities/${activity.id}`}>View Activity</Link>
+          <Popconfirm
+            title="Are you sure you want to delete this activity?"
+            onConfirm={() => handleDelete(activity.id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <a style={{ marginLeft: 16, color: 'red' }}>Delete</a>
+          </Popconfirm>
+        </span>
       ),
-    }
+    },
   ];
 
   return (
     <div>
       <h1>Activities Admin</h1>
       <Table
-        dataSource={activityStore.activitiesByDate.slice()} // Ensure data is observable and cloned
+        dataSource={activityStore.activities.slice()} // Use all activities from store
         columns={columns}
         loading={activityStore.loadingInitial}
-        rowKey={(activity) => activity.id} // Assuming each activity has a unique id
+        rowKey={(activity) => activity.id}
       />
     </div>
   );
