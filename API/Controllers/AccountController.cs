@@ -46,7 +46,7 @@ namespace API.Controllers
                     ActivitiesCount = user.Activities.Count,
                     FollowersCount = user.Followers.Count,
                     FollowingsCount = user.Followings.Count,
-                     IsBanned = user.IsBanned 
+                    IsBanned = user.IsBanned
                 })
                 .ToListAsync();
 
@@ -54,6 +54,7 @@ namespace API.Controllers
         }
 
         [AllowAnonymous]
+        [Authorize(Policy = "NotBanned")]
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {

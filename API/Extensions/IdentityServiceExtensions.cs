@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using API.Services;
 using Domain;
@@ -14,8 +15,7 @@ namespace API.Extensions
 {
     public static class IdentityServiceExtensions
     {
-        public static IServiceCollection AddIdentityServices(this IServiceCollection services,
-            IConfiguration config)
+        public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration config)
         {
             services.AddIdentityCore<AppUser>(opt =>
             {
@@ -72,6 +72,16 @@ namespace API.Extensions
                 options.AddPolicy("IsActivityHost", policy =>
                 {
                     policy.Requirements.Add(new IsHostRequirement());
+                });
+
+                // Policy to require users to not be banned
+                options.AddPolicy("NotBanned", policy =>
+                {
+                    policy.RequireAssertion(context =>
+                    {
+                        var isBanned = context.User.HasClaim(c => c.Type == "IsBanned" && bool.TryParse(c.Value, out var banned) && banned);
+                        return !isBanned;
+                    });
                 });
             });
 
