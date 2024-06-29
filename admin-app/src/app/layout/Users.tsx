@@ -59,10 +59,12 @@ const Users = () => {
     }
   };
 
-  // Filter users based on search query
+  // Filter users based on search query across multiple fields
   const filteredUsers = userStore.users.filter(user =>
     user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.displayName.toLowerCase().includes(searchQuery.toLowerCase())
+    user.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchQuery.toLowerCase())
+    // Add more fields as needed
   );
 
   return (

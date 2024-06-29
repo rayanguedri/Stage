@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Table, Tag, Tooltip, Popconfirm, message, Spin, Button } from 'antd';
+import { Table, Tag, Tooltip, Popconfirm, message, Spin, Button, Input } from 'antd';
 import { useStore } from '../stores/store';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
@@ -11,6 +11,7 @@ const ActivitiesAdmin = observer(() => {
   const { activityStore, userStore } = useStore();
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   useEffect(() => {
     const loadActivitiesAndUsers = async () => {
@@ -129,9 +130,23 @@ const ActivitiesAdmin = observer(() => {
     onChange: onSelectChange,
   };
 
+  // Filter activities based on search query
+  const filteredActivities = activityStore.activities.filter(activity =>
+    activity.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    activity.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    activity.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    activity.venue.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div>
       <h1>Activities Admin</h1>
+      <Input
+        placeholder='Search activities...'
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        style={{ marginBottom: '16px' }}
+      />
       <Spin spinning={activityStore.loadingInitial}>
         <div style={{ marginBottom: 16 }}>
           <Button
@@ -144,7 +159,7 @@ const ActivitiesAdmin = observer(() => {
           </Button>
         </div>
         <Table
-          dataSource={activityStore.activities} // Use all activities from store
+          dataSource={filteredActivities} // Use filtered activities
           columns={columns}
           rowKey={(record) => record.id}
           pagination={false} // Disable built-in pagination
