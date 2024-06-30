@@ -24,7 +24,7 @@ const mapOptions = {
 };
 
 const ActivityDetailedHeader = observer(({ activity }: Props) => {
-  const { activityStore: { rateActivity, loading, cancelActivityToggle, updateAttendeance, purchaseTicket } } = useStore();
+  const { activityStore: { rateActivity, loading, cancelActivityToggle, updateAttendance, purchaseTicket } } = useStore();
   const [userRating, setUserRating] = useState<number | undefined>(activity.averageRating);
   const [ticketPurchased, setTicketPurchased] = useState<boolean>(false);
   const stripePromise = loadStripe('pk_test_51PLpOJEWVw1xAHG0Zz5XGWA6BDOk4ndH1EVWhDE4HduJHwkc7ERxwhfsDMO50sdK5DO3NQH40e5mFhV4dM1d4z20009Uy9Fkix');
@@ -149,7 +149,7 @@ const ActivityDetailedHeader = observer(({ activity }: Props) => {
           <Label style={{ position: 'absolute', zIndex: 1000, left: -14, top: 20 }} ribbon color='red' content='Cancelled' />
         }
         {ticketPurchased &&
-          <Header as='h2' color='green' attached='top'>Ticket Purchased</Header>
+          <Label style={{ position: 'absolute', zIndex: 1000, left: -14, top: 20 }} ribbon color='green' content='Ticket Purchased' />
         }
         <Image src={`/assets/categoryImages/${activity.category}.jpg`} fluid />
         <Segment basic>
@@ -241,7 +241,7 @@ const ActivityDetailedHeader = observer(({ activity }: Props) => {
           floated='right'
           disabled={ticketPurchased || activity.isCancelled || activity.requiresPayment === false}
         >
-          {ticketPurchased ? 'Ticket Purchased' : 'Purchase Ticket'}
+          
         </Button>
         {activity.isHost ? (
           <>
@@ -258,9 +258,9 @@ const ActivityDetailedHeader = observer(({ activity }: Props) => {
             </Button>
           </>
         ) : activity.isGoing ? (
-            <Button loading={loading} onClick={updateAttendeance}>Cancel attendance</Button>
+            <Button loading={loading} onClick={updateAttendance}>Cancel attendance</Button>
           ) : (
-              <Button disabled={activity.isCancelled} loading={loading} onClick={updateAttendeance} color='teal'>Join Activity</Button>
+              <Button disabled={activity.isCancelled} loading={loading} onClick={updateAttendance} color='teal'>Join Activity</Button>
             )}
       </Segment>
     </Segment.Group>

@@ -1,117 +1,184 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import agent from '../../api/agent';
 import Chart from 'chart.js/auto';
-import StatisticsChart from '../../layout/StatisticsChart'; // Import StatisticsChart component
 
 interface Statistics {
     totalActivities: number;
     totalUsers: number;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    categoryCounts?: any[]; // Adjust as per your actual data structure and needs
-    // Add other properties as needed
+    averageRating: number;
+    totalComments: number;
+    totalPhotos: number;
+    averageTicketsPerActivity: number;
+    categoryCounts: CategoryFrequency[];
+    commentCountsPerCategory: CategoryCount[];
+}
+
+interface CategoryFrequency {
+    category: string;
+    count: number;
+}
+
+interface CategoryCount {
+    category: string;
+    count: number;
 }
 
 const StatisticsPage = () => {
     const [statistics, setStatistics] = useState<Statistics | null>(null);
-    const activitiesChartRef = useRef<Chart<"line"> | null>(null);
-    const usersChartRef = useRef<Chart<"line"> | null>(null);
-    const activitiesChartCanvasRef = useRef<HTMLCanvasElement | null>(null);
-    const usersChartCanvasRef = useRef<HTMLCanvasElement | null>(null);
+    const ratingChartRef = useRef<Chart<"bar"> | null>(null);
+    const commentsChartRef = useRef<Chart<"bar"> | null>(null);
+    const photosChartRef = useRef<Chart<"bar"> | null>(null);
+    const ticketsChartRef = useRef<Chart<"bar"> | null>(null);
+    const categoryChartRef = useRef<Chart<"bar"> | null>(null);
 
-    const getMonthName = (monthIndex: number) => {
-        const months = [
-            'January', 'February', 'March', 'April',
-            'May', 'June', 'July', 'August',
-            'September', 'October', 'November', 'December'
-        ];
-        return months[monthIndex];
-    };
-
-    const generateMonthLabels = useCallback(() => {
+    const generateCategoryLabels = useCallback(() => {
         if (statistics) {
-            // Assuming statistics object contains data for the last 12 months
-            const currentMonth = new Date().getMonth(); // Get current month index (0-11)
-            const months = [];
-
-            for (let i = 0; i < 12; i++) {
-                const monthIndex = (currentMonth + 12 - i) % 12; // Calculate month index in reverse order
-                months.push(getMonthName(monthIndex)); // Assuming getMonthName is a function to get month name
-            }
-
-            return months.reverse(); // Reverse array to display in correct chronological order (optional)
+            return statistics.categoryCounts.map(c => c.category);
         }
-
         return [];
     }, [statistics]);
 
     const initializeCharts = useCallback(() => {
         if (statistics) {
-            destroyCharts(); // Cleanup previous charts if they exist
+            destroyCharts();
 
-            // Generate month labels dynamically
-            const months = generateMonthLabels();
-
-            // Initialize total activities chart
-            const activitiesChartCtx = activitiesChartCanvasRef.current?.getContext('2d');
-            if (activitiesChartCtx) {
-                activitiesChartRef.current = new Chart(activitiesChartCtx, {
-                    type: 'line',
+            // Rating Chart
+            const ratingChartCtx = document.getElementById('ratingChart') as HTMLCanvasElement;
+            if (ratingChartCtx) {
+                ratingChartRef.current = new Chart(ratingChartCtx, {
+                    type: 'bar',
                     data: {
-                        labels: months,
+                        labels: ['Average Rating'],
                         datasets: [{
-                            label: 'Total Activities',
-                            data: [statistics.totalActivities], // Replace with actual data array
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 2,
-                            fill: false
+                            label: 'Average Rating',
+                            data: [statistics.averageRating.toFixed(2)],
+                            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
                         }]
                     },
                     options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
                         scales: {
                             y: {
-                                beginAtZero: true
-                            },
-                            x: {
-                                type: 'category',
-                                labels: months,
-                                position: 'bottom'
+                                beginAtZero: true,
+                                suggestedMax: 5 // Assuming ratings are on a 0-5 scale
                             }
                         }
                     }
                 });
             }
 
-            // Initialize total users chart
-            const usersChartCtx = usersChartCanvasRef.current?.getContext('2d');
-            if (usersChartCtx) {
-                usersChartRef.current = new Chart(usersChartCtx, {
-                    type: 'line',
+            // Comments Chart
+            const commentsChartCtx = document.getElementById('commentsChart') as HTMLCanvasElement;
+            if (commentsChartCtx) {
+                commentsChartRef.current = new Chart(commentsChartCtx, {
+                    type: 'bar',
                     data: {
-                        labels: months,
+                        labels: ['Total Comments'],
                         datasets: [{
-                            label: 'Total Users',
-                            data: [statistics.totalUsers], // Replace with actual data array
-                            borderColor: 'rgba(255, 99, 132, 1)',
-                            borderWidth: 2,
-                            fill: false
+                            label: 'Total Comments',
+                            data: [statistics.totalComments],
+                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
                         }]
                     },
                     options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
                         scales: {
                             y: {
                                 beginAtZero: true
-                            },
-                            x: {
-                                type: 'category',
-                                labels: months,
-                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Photos Chart
+            const photosChartCtx = document.getElementById('photosChart') as HTMLCanvasElement;
+            if (photosChartCtx) {
+                photosChartRef.current = new Chart(photosChartCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Total Photos'],
+                        datasets: [{
+                            label: 'Total Photos',
+                            data: [statistics.totalPhotos],
+                            backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Tickets Chart
+            const ticketsChartCtx = document.getElementById('ticketsChart') as HTMLCanvasElement;
+            if (ticketsChartCtx) {
+                ticketsChartRef.current = new Chart(ticketsChartCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Average Tickets per Activity'],
+                        datasets: [{
+                            label: 'Average Tickets per Activity',
+                            data: [statistics.averageTicketsPerActivity.toFixed(2)],
+                            backgroundColor: 'rgba(153, 102, 255, 0.5)',
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Category Chart
+            const categoryChartCtx = document.getElementById('categoryChart') as HTMLCanvasElement;
+            if (categoryChartCtx) {
+                categoryChartRef.current = new Chart(categoryChartCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: generateCategoryLabels(),
+                        datasets: [{
+                            label: 'Category Counts',
+                            data: statistics.categoryCounts.map(c => c.count),
+                            backgroundColor: statistics.categoryCounts.map(() => `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.5)`),
+                            borderColor: statistics.categoryCounts.map(() => `rgba(54, 162, 235, 1)`),
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
                             }
                         }
                     }
                 });
             }
         }
-    }, [statistics, generateMonthLabels]);
+    }, [statistics, generateCategoryLabels]);
 
     useEffect(() => {
         const fetchStatistics = async () => {
@@ -131,40 +198,53 @@ const StatisticsPage = () => {
             initializeCharts();
         }
 
-        // Cleanup on unmount
         return () => {
             destroyCharts();
         };
     }, [initializeCharts, statistics]);
 
     const destroyCharts = () => {
-        // Destroy previous chart instances if they exist
-        if (activitiesChartRef.current) {
-            activitiesChartRef.current.destroy();
-            activitiesChartRef.current = null;
+        if (ratingChartRef.current) {
+            ratingChartRef.current.destroy();
+            ratingChartRef.current = null;
         }
-        if (usersChartRef.current) {
-            usersChartRef.current.destroy();
-            usersChartRef.current = null;
+        if (commentsChartRef.current) {
+            commentsChartRef.current.destroy();
+            commentsChartRef.current = null;
+        }
+        if (photosChartRef.current) {
+            photosChartRef.current.destroy();
+            photosChartRef.current = null;
+        }
+        if (ticketsChartRef.current) {
+            ticketsChartRef.current.destroy();
+            ticketsChartRef.current = null;
+        }
+        if (categoryChartRef.current) {
+            categoryChartRef.current.destroy();
+            categoryChartRef.current = null;
         }
     };
 
     return (
         <div>
-            <h1>Website statistics</h1>
+            <h1>Website Statistics</h1>
             {statistics ? (
-                <div>
-                    <p>Total Activities: {statistics.totalActivities}</p>
-                    <p>Total Users: {statistics.totalUsers}</p>
-                    {/* Add more statistics as needed */}
-                    {statistics.categoryCounts && <StatisticsChart categoryCounts={statistics.categoryCounts} />}
-                    <div style={{ marginBottom: '20px' }}>
-                        <h2>Total Activities</h2>
-                        <canvas ref={activitiesChartCanvasRef} />
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+                    <div style={{ flex: '1 1 300px', maxWidth: '300px', marginBottom: '20px' }}>
+                        <canvas id="ratingChart" />
                     </div>
-                    <div style={{ marginBottom: '20px' }}>
-                        <h2>Total Users</h2>
-                        <canvas ref={usersChartCanvasRef} />
+                    <div style={{ flex: '1 1 300px', maxWidth: '300px', marginBottom: '20px' }}>
+                        <canvas id="commentsChart" />
+                    </div>
+                    <div style={{ flex: '1 1 300px', maxWidth: '300px', marginBottom: '20px' }}>
+                        <canvas id="photosChart" />
+                    </div>
+                    <div style={{ flex: '1 1 300px', maxWidth: '300px', marginBottom: '20px' }}>
+                        <canvas id="ticketsChart" />
+                    </div>
+                    <div style={{ flex: '1 1 300px', maxWidth: '300px', marginBottom: '20px' }}>
+                        <canvas id="categoryChart" />
                     </div>
                 </div>
             ) : (

@@ -8,7 +8,7 @@ namespace API.Controllers
 {
     [Authorize]
     [ApiController]
-   // [Route("api/statistics")]
+    // [Route("api/statistics")]
     public class StatisticsController : ControllerBase
     {
         private readonly DataContext _context;

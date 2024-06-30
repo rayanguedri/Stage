@@ -45,4 +45,14 @@ body {
     font-weight: normal;
   }
   
-  /*end home page styles*/
+  .green-label {
+    position: absolute;
+    z-index: 1000;
+    left: -14px;
+    top: 60px;
+    background-color: green;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+  }

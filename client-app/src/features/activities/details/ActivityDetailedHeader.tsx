@@ -144,12 +144,12 @@ const ActivityDetailedHeader = observer(({ activity }: Props) => {
 
   return (
     <Segment.Group>
-      <Segment basic attached='top' style={{ padding: '0' }}>
+      <Segment basic attached='top' style={{ padding: '0', position: 'relative' }}>
         {activity.isCancelled &&
           <Label style={{ position: 'absolute', zIndex: 1000, left: -14, top: 20 }} ribbon color='red' content='Cancelled' />
         }
         {ticketPurchased &&
-          <Header as='h2' color='green' attached='top'>Ticket Purchased</Header>
+          <Label style={{ position: 'absolute', zIndex: 1000, left: -14, top: activity.isCancelled ? 50 : 20 }} ribbon color='green' content='Ticket Purchased' />
         }
         <Image src={`/assets/categoryImages/${activity.category}.jpg`} fluid />
         <Segment basic>

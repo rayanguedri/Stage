@@ -1,8 +1,12 @@
 export interface Statistics {
     totalActivities: number;
     totalUsers: number;
-    categoryFrequencies: CategoryFrequency[];
-    commentCounts: CommentCount[];
+    averageRating: number;
+    totalComments: number;
+    totalPhotos: number;
+    averageTicketsPerActivity: number;
+    categoryCounts: CategoryFrequency[];
+    commentCountsPerCategory: CategoryCount[];
 }
 
 export interface CategoryFrequency {
@@ -10,7 +14,7 @@ export interface CategoryFrequency {
     count: number;
 }
 
-export interface CommentCount {
-    activityId: string;
+export interface CategoryCount {
+    category: string;
     count: number;
 }

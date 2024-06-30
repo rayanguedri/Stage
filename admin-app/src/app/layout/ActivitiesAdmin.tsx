@@ -1,21 +1,25 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Table, Tag, Tooltip, Popconfirm, message, Spin, Button, Input } from 'antd';
+import { Table, Tooltip, Popconfirm, message, Spin, Button, Input, Slider, Row, Col } from 'antd';
 import { useStore } from '../stores/store';
 import { format } from 'date-fns';
 import { Link } from 'react-router-dom';
 import { Profile } from '../models/profile';
 import { Activity } from '../models/activity';
+import { ChatComment } from '../models/comment';
+import './styles.css'; // Import the CSS file for styling
 
 const ActivitiesAdmin = observer(() => {
   const { activityStore, userStore } = useStore();
   const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [minAverageRating, setMinAverageRating] = useState<number>(0);
+  const [maxAverageRating, setMaxAverageRating] = useState<number>(5);
 
   useEffect(() => {
     const loadActivitiesAndUsers = async () => {
-      await activityStore.loadActivities(); // Load all activities
+      await activityStore.loadActivities();
       await userStore.loadUsers();
     };
     loadActivitiesAndUsers();
@@ -25,7 +29,6 @@ const ActivitiesAdmin = observer(() => {
     try {
       await activityStore.deleteActivityAdmin(id);
       message.success('Activity deleted successfully');
-      // Reload activities after deletion
       await activityStore.loadActivities();
     } catch (error) {
       message.error('Failed to delete activity');
@@ -35,12 +38,10 @@ const ActivitiesAdmin = observer(() => {
   const handleBatchDelete = async () => {
     try {
       setLoading(true);
-      // Perform batch deletion for selected activities
       await Promise.all(selectedRowKeys.map(async (id) => {
         await activityStore.deleteActivityAdmin(id);
       }));
       message.success('Selected activities deleted successfully');
-      // Clear selection and reload activities after deletion
       setSelectedRowKeys([]);
       await activityStore.loadActivities();
     } catch (error) {
@@ -55,6 +56,7 @@ const ActivitiesAdmin = observer(() => {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
+      ellipsis: true,
       render: (text: string, record: Activity) => (
         <Link to={`/activities/${record.id}`}>{text}</Link>
       ),
@@ -65,20 +67,24 @@ const ActivitiesAdmin = observer(() => {
       key: 'date',
       render: (date: string) => (date ? format(new Date(date), 'dd MMM yyyy') : 'N/A'),
     },
-    { title: 'Category', dataIndex: 'category', key: 'category' },
-    { title: 'Description', dataIndex: 'description', key: 'description' },
-    { title: 'City', dataIndex: 'city', key: 'city' },
-    { title: 'Venue', dataIndex: 'venue', key: 'venue' },
+    { title: 'Category', dataIndex: 'category', key: 'category', ellipsis: true },
+    { title: 'Description', dataIndex: 'description', key: 'description', ellipsis: true },
+    { title: 'City', dataIndex: 'city', key: 'city', ellipsis: true },
+    { title: 'Venue', dataIndex: 'venue', key: 'venue', ellipsis: true },
     {
-      title: 'Attendees',
+      title: 'Nº of Comments',
+      dataIndex: 'comments',
+      key: 'comments',
+      render: (comments: ChatComment[]) => (
+        <span>{comments ? comments.length : 0}</span>
+      ),
+    },
+    {
+      title: 'Nº of Attendees',
       dataIndex: 'attendees',
       key: 'attendees',
       render: (attendees: Profile[]) => (
-        <span>
-          {attendees?.map((attendee) => (
-            <Tag key={attendee.username}>{attendee.displayName}</Tag>
-          ))}
-        </span>
+        <span>{attendees.length}</span>
       ),
     },
     {
@@ -102,6 +108,12 @@ const ActivitiesAdmin = observer(() => {
           'Unknown'
         );
       },
+    },
+    {
+      title: 'Average Rating',
+      dataIndex: 'averageRating',
+      key: 'averageRating',
+      render: (averageRating: number) => (averageRating ? averageRating.toFixed(1) : 'N/A'),
     },
     {
       title: 'Actions',
@@ -130,23 +142,61 @@ const ActivitiesAdmin = observer(() => {
     onChange: onSelectChange,
   };
 
-  // Filter activities based on search query
-  const filteredActivities = activityStore.activities.filter(activity =>
-    activity.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    activity.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    activity.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    activity.venue.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredActivities = activityStore.activities
+    .filter(activity =>
+      (activity.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      activity.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      activity.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      activity.venue.toLowerCase().includes(searchQuery.toLowerCase())) &&
+      (activity.averageRating >= minAverageRating) &&
+      (activity.averageRating <= maxAverageRating)
+    );
 
   return (
     <div>
       <h1>Activities Admin</h1>
-      <Input
-        placeholder='Search activities...'
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        style={{ marginBottom: '16px' }}
-      />
+      <div style={{ marginBottom: '16px' }}>
+        <Input
+          placeholder='Search activities...'
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          style={{ marginBottom: '8px', width: '300px' }}
+        />
+        <Row gutter={16} align="middle">
+          <Col>
+            <span>Min Rating:</span>
+          </Col>
+          <Col>
+            <Slider
+              min={0}
+              max={5}
+              step={0.1}
+              value={minAverageRating}
+              onChange={(value) => setMinAverageRating(value)}
+              style={{ width: '200px' }}
+            />
+          </Col>
+          <Col>
+            <span>{minAverageRating.toFixed(1)}</span>
+          </Col>
+          <Col>
+            <span>Max Rating:</span>
+          </Col>
+          <Col>
+            <Slider
+              min={0}
+              max={5}
+              step={0.1}
+              value={maxAverageRating}
+              onChange={(value) => setMaxAverageRating(value)}
+              style={{ width: '200px' }}
+            />
+          </Col>
+          <Col>
+            <span>{maxAverageRating.toFixed(1)}</span>
+          </Col>
+        </Row>
+      </div>
       <Spin spinning={activityStore.loadingInitial}>
         <div style={{ marginBottom: 16 }}>
           <Button
@@ -159,14 +209,15 @@ const ActivitiesAdmin = observer(() => {
           </Button>
         </div>
         <Table
-          dataSource={filteredActivities} // Use filtered activities
+          dataSource={filteredActivities}
           columns={columns}
           rowKey={(record) => record.id}
-          pagination={false} // Disable built-in pagination
-          rowSelection={{ ...rowSelection, type: 'checkbox' }} // Enable row selection with checkboxes
-          scroll={{ y: 400 }} // Example scroll height
+          pagination={false}
+          rowSelection={{ ...rowSelection, type: 'checkbox' }}
+          scroll={{ x: 'max-content' }} // Adjust scroll horizontally to fit content
           loading={loading}
-          onChange={() => {}} // Empty onChange to prevent console warnings
+          onChange={() => {}}
+          rowClassName={(record, index) => index % 2 === 0 ? 'row-even' : 'row-odd'} // Apply alternate row colors
         />
       </Spin>
     </div>
