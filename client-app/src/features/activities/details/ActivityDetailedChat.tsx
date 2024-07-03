@@ -12,8 +12,9 @@ interface Props {
 }
 
 export default observer(function ActivityDetailedChat({ activityId }: Props) {
-    const { commentStore } = useStore();
+    const { commentStore, userStore } = useStore();
     const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
+    const currentUser = userStore.user; // Assuming user is stored in userStore
 
     useEffect(() => {
         if (activityId) {
@@ -141,18 +142,22 @@ export default observer(function ActivityDetailedChat({ activityId }: Props) {
                                             {comment.body}
                                         </Comment.Text>
                                         <Comment.Actions>
-                                            <Button
-                                                color="blue"
-                                                onClick={() => setEditingCommentId(comment.id)}
-                                            >
-                                                <Icon name="edit" /> Edit
-                                            </Button>
-                                            <Button
-                                                color="red"
-                                                onClick={() => commentStore.deleteComment(comment.id)}
-                                            >
-                                                Delete
-                                            </Button>
+                                            {currentUser && currentUser.username === comment.username && (
+                                                <>
+                                                    <Button
+                                                        color="blue"
+                                                        onClick={() => setEditingCommentId(comment.id)}
+                                                    >
+                                                        <Icon name="edit" /> Edit
+                                                    </Button>
+                                                    <Button
+                                                        color="red"
+                                                        onClick={() => commentStore.deleteComment(comment.id)}
+                                                    >
+                                                        Delete
+                                                    </Button>
+                                                </>
+                                            )}
                                         </Comment.Actions>
                                     </>
                                 )}

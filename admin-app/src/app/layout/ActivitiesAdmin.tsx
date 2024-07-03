@@ -113,7 +113,7 @@ const ActivitiesAdmin = observer(() => {
       title: 'Average Rating',
       dataIndex: 'averageRating',
       key: 'averageRating',
-      render: (averageRating: number) => (averageRating ? averageRating.toFixed(1) : 'N/A'),
+      render: (averageRating: number) => (averageRating ? averageRating.toFixed(1) : 'No rating yet'),
     },
     {
       title: 'Actions',
@@ -214,10 +214,10 @@ const ActivitiesAdmin = observer(() => {
           rowKey={(record) => record.id}
           pagination={false}
           rowSelection={{ ...rowSelection, type: 'checkbox' }}
-          scroll={{ x: 'max-content' }} // Adjust scroll horizontally to fit content
+          scroll={{ x: 'max-content' }} 
           loading={loading}
           onChange={() => {}}
-          rowClassName={(record, index) => index % 2 === 0 ? 'row-even' : 'row-odd'} // Apply alternate row colors
+          rowClassName={(_record, index) => index % 2 === 0 ? 'row-even' : 'row-odd'} 
         />
       </Spin>
     </div>

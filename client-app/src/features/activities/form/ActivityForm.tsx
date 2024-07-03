@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Button, Header, Segment } from "semantic-ui-react";
+import { Button, Header, Segment, Form as SemanticForm, Checkbox, Grid } from "semantic-ui-react";
 import LoadingComponent from '../../../app/layout/LoadingComponent';
 import { useStore } from '../../../app/stores/store';
 import { v4 as uuid } from 'uuid';
@@ -14,7 +14,7 @@ import MyTextAreaInput from '../../../app/common/form/MyTextArea';
 import MyTextInput from '../../../app/common/form/MyTextInput';
 import { categoryOptions } from '../../../app/common/options/categoryOptions';
 import LocationPicker from '../../../app/util/LocationPicker';
-
+import '../../../app/layout/styles.css'; 
 
 export default observer(function ActivityForm() {
     const { activityStore } = useStore();
@@ -33,9 +33,20 @@ export default observer(function ActivityForm() {
         description: Yup.string().required(),
         date: Yup.string().required('Date is required').nullable(),
         venue: Yup.string().required(),
-        // Optional validation for latitude and longitude
+        city: Yup.string().required('City is required'),
         latitude: Yup.number().nullable(),
         longitude: Yup.number().nullable(),
+        requiresPayment: Yup.boolean(),
+        ticketPrice: Yup.number().when('requiresPayment', {
+            is: true,
+            then: (schema) => schema.required('Ticket price is required').min(0, 'Ticket price must be positive'),
+            otherwise: (schema) => schema.notRequired()
+        }).nullable(),
+        ticketQuantityAvailable: Yup.number().when('requiresPayment', {
+            is: true,
+            then: (schema) => schema.required('Ticket quantity is required').min(1, 'Ticket quantity must be at least 1'),
+            otherwise: (schema) => schema.notRequired()
+        }).nullable()
     });
 
     useEffect(() => {
@@ -44,7 +55,6 @@ export default observer(function ActivityForm() {
                 if (activity) {
                     setActivityState(new ActivityFormValues(activity));
                     setRequiresPayment(activity.requiresPayment);
-                    // Set initial coordinates
                     setLatitude(activity.latitude);
                     setLongitude(activity.longitude);
                 }
@@ -87,52 +97,99 @@ export default observer(function ActivityForm() {
                 validationSchema={validationSchema}
                 initialValues={activityState}
                 onSubmit={values => handleFormSubmit(values)}>
-                {({ handleSubmit, isValid, isSubmitting, dirty }) => (
-                    <Form className='ui form' onSubmit={handleSubmit} autoComplete='off'>
-                        <MyTextInput name='title' placeholder='Title' />
-                        <MyTextAreaInput rows={3} name='description' placeholder='Description' />
-                        <MySelectInput options={categoryOptions} name='category' placeholder='Category' />
-                        <MyDateInput name='date' placeholderText='Date' showTimeSelect timeCaption='time' dateFormat='MMMM d, yyyy h:mm aa' />
+                {({ handleSubmit, isValid, isSubmitting, dirty, values }) => {
+                    const isSubmitDisabled = requiresPayment && (!values.ticketPrice || !values.ticketQuantityAvailable);
 
-                        <Header content='Location Details' sub color='teal' />
-                        <MyTextInput name='venue' placeholder='Venue' />
-                        <MyTextInput name='city' placeholder='City' />
+                    return (
+                        <Form className='ui form' onSubmit={handleSubmit} autoComplete='off'>
+                            <Grid>
+                                <Grid.Column width={10}>
+                                    <SemanticForm.Field>
+                                        <label>Title</label>
+                                        <MyTextInput name='title' placeholder='Title' />
+                                    </SemanticForm.Field>
+                                    <SemanticForm.Field>
+                                        <label>Description</label>
+                                        <MyTextAreaInput rows={3} name='description' placeholder='Description' />
+                                    </SemanticForm.Field>
+                                    <SemanticForm.Field>
+                                        <label>Category</label>
+                                        <MySelectInput options={categoryOptions} name='category' placeholder='Category' />
+                                    </SemanticForm.Field>
+                                    <SemanticForm.Field>
+                                        <label>Date</label>
+                                        <MyDateInput 
+                                            name='date' 
+                                            placeholderText='Date' 
+                                            showTimeSelect 
+                                            timeCaption='time' 
+                                            dateFormat='MMMM d, yyyy h:mm aa' 
+                                        />
+                                    </SemanticForm.Field>
+                                    <SemanticForm.Field>
+                                        <Checkbox
+                                            label='Requires Payment'
+                                            checked={requiresPayment}
+                                            onChange={(_e, { checked }) => setRequiresPayment(!!checked)}
+                                        />
+                                    </SemanticForm.Field>
+                                    {requiresPayment && (
+                                        <>
+                                            <SemanticForm.Field>
+                                                <label>Ticket Price</label>
+                                                <MyTextInput name='ticketPrice' placeholder='Ticket Price' type='number' />
+                                            </SemanticForm.Field>
+                                            <SemanticForm.Field>
+                                                <label>Ticket Quantity Available</label>
+                                                <MyTextInput name='ticketQuantityAvailable' placeholder='Ticket Quantity Available' type='number' />
+                                            </SemanticForm.Field>
+                                        </>
+                                    )}
+                                </Grid.Column>
+                                <Grid.Column width={6}>
+                                    <Header content='Location Details' sub color='teal' />
+                                    <SemanticForm.Field>
+                                        <label>Venue</label>
+                                        <MyTextInput name='venue' placeholder='Venue' />
+                                    </SemanticForm.Field>
+                                    <SemanticForm.Field>
+                                        <label>City</label>
+                                        <MyTextInput name='city' placeholder='City' />
+                                    </SemanticForm.Field>
+                                    <SemanticForm.Field>
+                                        <label>Location</label>
+                                        <LocationPicker
+                                            onLocationSelect={(lat, lng) => {
+                                                setLatitude(lat);
+                                                setLongitude(lng);
+                                            }}
+                                        />
+                                    </SemanticForm.Field>
+                                </Grid.Column>
+                            </Grid>
 
-                        {/* Include the LocationPicker */}
-                        <LocationPicker
-                            onLocationSelect={(lat, lng) => {
-                                setLatitude(lat);
-                                setLongitude(lng);
-                            }}
-                        />
-
-                        {/* Ticket Details */}
-                        <MyTextInput name='ticketPrice' placeholder='Ticket Price' type='number' />
-                        <MyTextInput name='ticketQuantityAvailable' placeholder='Ticket Quantity Available' type='number' />
-                        <label>
-                            <input
-                                type='checkbox'
-                                checked={requiresPayment}
-                                onChange={(e) => setRequiresPayment(e.target.checked)}
+                            <Button 
+                                disabled={isSubmitting || !dirty || !isValid || isSubmitDisabled} 
+                                loading={isSubmitting} 
+                                floated='right' 
+                                positive 
+                                type='submit' 
+                                content='Submit' 
                             />
-                            Requires Payment
-                        </label>
+                            <Button as={Link} to='/activities' floated='right' type='button' content='Cancel' />
 
-                        <Button disabled={isSubmitting || !dirty || !isValid} loading={isSubmitting} floated='right' positive type='submit' content='Submit' />
-                        <Button as={Link} to='/activities' floated='right' type='button' content='Cancel' />
-
-                        {/* Delete button, visible only if editing an existing activity */}
-                        {id && (
-                            <Button
-                                floated='left'
-                                type='button'
-                                color='red'
-                                content='Delete'
-                                onClick={handleDeleteActivity}
-                            />
-                        )}
-                    </Form>
-                )}
+                            {id && (
+                                <Button
+                                    floated='left'
+                                    type='button'
+                                    color='red'
+                                    content='Delete'
+                                    onClick={handleDeleteActivity}
+                                />
+                            )}
+                        </Form>
+                    );
+                }}
             </Formik>
         </Segment>
     );

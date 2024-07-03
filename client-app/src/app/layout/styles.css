@@ -56,3 +56,25 @@ body {
     border-radius: 5px;
     font-weight: bold;
   }
+
+  /* ActivityForm.css */
+.ui.form {
+  margin: 0;
+}
+
+.ui.grid {
+  margin: 0;
+}
+
+.ui.form .field {
+  margin-bottom: 1em;
+}
+
+.ui.form .field label {
+  font-weight: bold;
+  color: #333;
+}
+
+.ui.button {
+  margin-top: 1em;
+}
