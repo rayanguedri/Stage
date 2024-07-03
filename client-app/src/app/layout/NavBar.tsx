@@ -10,16 +10,18 @@ export default observer(function NavBar() {
             <Container>
                 <Menu.Item as={NavLink} to='/' header>
                     <img src='/assets/logo.png' alt='logo' style={{marginRight: 10}}/>
-                    Reactivities
+                    ODASLAB
                 </Menu.Item>
                 {isLoggedIn &&
                 <>
                 <Menu.Item as={NavLink} to='/activities' name='Activities' />
+                <Menu.Item as={NavLink} to='/AboutUs' name='About Us' />
                
 
                 <Menu.Item>
                     <Button as={NavLink} to='/createActivity' positive content='Create Activity' />
                 </Menu.Item>
+                
                 <Menu.Item position='right'>
                     <Image avatar spaced='right' src={user?.image || '/assets/user.png'} />
                     <Dropdown pointing='top left' text={user?.displayName}>

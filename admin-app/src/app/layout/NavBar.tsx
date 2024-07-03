@@ -60,7 +60,7 @@ const Sidebar = () => {
       >
         <Box sx={{ p: 2 }}>
           <Typography variant="h6" component="div" className="text-white">
-            Reactivities
+            ODASLAB
           </Typography>
         </Box>
         <Divider />

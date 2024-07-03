@@ -16,6 +16,7 @@ import SuccessPage from "../../features/redirect/SuccessPage";
 import ResetPasswordForm from "../../features/users/ResetPasswordForm";
 import EmailSentPage from "../../features/redirect/EmailSentPage";
 import StatisticsPage from "../common/modals/StatisticsPage";
+import AboutUs from "../layout/AboutUs";
 
 export const routes: RouteObject[] = [
     {
@@ -32,6 +33,8 @@ export const routes: RouteObject[] = [
                     { path: 'profiles/:username', element: <ProfilePage /> },
                     { path: 'payment/:activityId', element: <ActivityWrapper /> }, 
                     { path: 'stats', element: <StatisticsPage /> },
+                    { path: 'AboutUs', element: <AboutUs /> },
+
                   
                     {path: '/success' ,element: <SuccessPage />},
                     {path: '/cancel' ,element: <CancelPage />},

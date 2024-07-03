@@ -42,7 +42,7 @@ const StatisticsPage = () => {
         if (statistics) {
             destroyCharts();
 
-            // Rating Chart
+            
             const ratingChartCtx = document.getElementById('ratingChart') as HTMLCanvasElement;
             if (ratingChartCtx) {
                 ratingChartRef.current = new Chart(ratingChartCtx, {
