@@ -1,5 +1,6 @@
 using Application.Core;
 using Application.Interfaces;
+using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -7,75 +8,62 @@ using Persistence;
 
 namespace Application.Comments
 {
-    public class Delete
+    public class EditAdmin
     {
-        
-        public class Command : IRequest<Result<Unit>>
+        public class Command : IRequest<Result<CommentDto>>
         {
             public int CommentId { get; set; }
             public Guid ActivityId { get; set; }
+            public string Body { get; set; }
         }
 
-        
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
                 RuleFor(x => x.CommentId).NotEmpty();
                 RuleFor(x => x.ActivityId).NotEmpty();
+                RuleFor(x => x.Body).NotEmpty();
             }
         }
 
-        
-        public class Handler : IRequestHandler<Command, Result<Unit>>
+        public class Handler : IRequestHandler<Command, Result<CommentDto>>
         {
             private readonly DataContext _context;
             private readonly IUserAccessor _userAccessor;
+            private readonly IMapper _mapper;
 
-            public Handler(DataContext context, IUserAccessor userAccessor)
+            public Handler(DataContext context, IUserAccessor userAccessor, IMapper mapper)
             {
                 _context = context;
                 _userAccessor = userAccessor;
+                _mapper = mapper;
             }
 
-            
-            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<CommentDto>> Handle(Command request, CancellationToken cancellationToken)
             {
-                
                 var comment = await _context.Comments
                     .Include(c => c.Author)
                     .FirstOrDefaultAsync(c => c.Id == request.CommentId, cancellationToken);
 
                 if (comment == null)
                 {
-                    
-                    return Result<Unit>.Failure("Comment not found");
+                    return Result<CommentDto>.Failure("Comment not found");
                 }
 
-                
-                var currentUser = await _context.Users
-                    .SingleOrDefaultAsync(u => u.UserName == _userAccessor.GetUsername(), cancellationToken);
+                // You may choose to implement more granular authorization logic here if needed
 
-                
-                if (comment.Author.UserName != currentUser.UserName)
-                {
-                    
-                    return Result<Unit>.Failure("You are not authorized to delete this comment");
-                }
+                // Update the comment body
+                comment.Body = request.Body;
 
-                
-                _context.Comments.Remove(comment);
-
-                
                 var success = await _context.SaveChangesAsync(cancellationToken) > 0;
 
                 if (!success)
                 {
-                    
-                    return Result<Unit>.Failure("Failed to delete the comment");
+                    return Result<CommentDto>.Failure("Failed to edit the comment");
                 }
 
-                return Result<Unit>.Success(Unit.Value);
+                return Result<CommentDto>.Success(_mapper.Map<CommentDto>(comment));
             }
         }
     }

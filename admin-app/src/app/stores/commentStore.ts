@@ -84,6 +84,17 @@ export default class CommentStore {
         }
     }
 
+    DeleteCommentAdmin = async (commentId: number) => {
+        try {
+            await this.hubConnection?.invoke('DeleteCommentAdmin', { commentId });
+            location.reload();
+        } catch (error) {
+            console.error('Failed to delete comment:', error);
+        }
+    }
+
+    //EditCommentAdmin
+
     editComment = async (commentId: number, body?: string, activityId?: string) => {
         try {
             // Invoke the 'EditComment' method on the server
@@ -97,4 +108,19 @@ export default class CommentStore {
             console.error('Failed to edit comment:', error);
         }
     }
+
+    EditCommentAdmin = async (commentId: number, body?: string, activityId?: string) => {
+        try {
+            // Invoke the 'EditComment' method on the server
+            await this.hubConnection?.invoke('EditCommentAdmin', {
+                commentId,
+                body,
+                activityId
+            });
+            location.reload();
+        } catch (error) {
+            console.error('Failed to edit comment:', error);
+        }
+    }
+
 }

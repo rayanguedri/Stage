@@ -149,7 +149,7 @@ export default observer(function ActivityDetailedChat({ activityId }: Props) {
                                             </Button>
                                             <Button
                                                 color="red"
-                                                onClick={() => commentStore.deleteComment(comment.id)}
+                                                onClick={() => commentStore.DeleteCommentAdmin(comment.id)}
                                             >
                                                 Delete
                                             </Button>

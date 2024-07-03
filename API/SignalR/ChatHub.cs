@@ -32,6 +32,19 @@ namespace API.SignalR
             }
         }
 
+        public async Task DeleteCommentAdmin(DeleteAdmin.Command command)
+        {
+            var result = await _mediator.Send(command);
+
+            if (result.IsSuccess)
+            {
+                await Clients.Group(command.ActivityId.ToString())
+                    .SendAsync("DeleteCommentAdmin", command.CommentId);
+            }
+        }
+
+
+
           public async Task EditComment(Edit.Command command)
         {
             var result = await _mediator.Send(command);
@@ -44,6 +57,19 @@ namespace API.SignalR
             }
         }
 
+
+         public async Task EditCommentAdmin(EditAdmin.Command command)
+        {
+            var result = await _mediator.Send(command);
+
+            if (result.IsSuccess)
+            {
+                // If the comment was successfully edited, broadcast the updated comment to the group
+                await Clients.Group(command.ActivityId.ToString())
+                    .SendAsync("EditCommentAdmin", result.Value);
+            }
+        }
+
         public override async Task OnConnectedAsync()
         {
             var httpContext = Context.GetHttpContext();
@@ -52,5 +78,8 @@ namespace API.SignalR
             var result = await _mediator.Send(new List.Query{ActivityId = Guid.Parse(activityId)});
             await Clients.Caller.SendAsync("LoadComments", result.Value);
         }
+
+        
+
     }
 }
