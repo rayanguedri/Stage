@@ -154,7 +154,7 @@ const ActivitiesAdmin = observer(() => {
 
   return (
     <div>
-      <h1>Activities Admin</h1>
+      <h1>Activities</h1>
       <div style={{ marginBottom: '16px' }}>
         <Input
           placeholder='Search activities...'

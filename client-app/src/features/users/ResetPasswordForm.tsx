@@ -1,7 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
 import agent from "../../app/api/agent";
 import { useState } from "react";
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function ResetPasswordForm() {
     const { token } = useParams<{ token: string }>(); // Ensure token is of type string
@@ -26,10 +27,12 @@ export default function ResetPasswordForm() {
         agent.Account.resetPassword(token, email, password)
             .then(() => {
                 console.log('Password reset successful');
-                navigate('/login');
+                toast.success('Password reset successful');
+                navigate('/');
             })
             .catch(error => {
                 console.error('Password reset failed:', error);
+                toast.error(`Password reset failed: ${error.message}`);
             });
     };
 
@@ -49,6 +52,8 @@ export default function ResetPasswordForm() {
                 placeholder="Enter new password"
             />
             <button onClick={handleResetPassword}>Reset Password</button>
+
+            <ToastContainer />
         </div>
     );
 }

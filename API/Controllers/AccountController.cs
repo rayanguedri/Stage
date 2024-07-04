@@ -228,7 +228,7 @@ namespace API.Controllers
                 return BadRequest("Failed to reset password.");
             }
 
-            return Redirect("/login");
+            return Ok("Password reset successful");
         }
         [HttpPost("banUser")]
         public async Task<IActionResult> BanUser(UserDto userDto)

@@ -136,16 +136,21 @@ export default class ActivityStore {
         const params = new URLSearchParams();
         params.append('pageNumber', this.pagingParams.pageNumber.toString());
         params.append('pageSize', this.pagingParams.pageSize.toString());
+        
         this.predicate.forEach((value, key) => {
-            if (key === 'startDate' || key === 'sortByProximity') {
+            if (key === 'startDate') {
+                params.append(key, (value as Date).toISOString());
+            } else if (key === 'sortByProximity') {
                 return;
             } else {
-                params.append(key, value);
+                params.append(key, value.toString());
             }
         });
+
         if (this.searchQuery) {
             params.append('searchTerm', this.searchQuery);
         }
+        
         return params;
     }
 
